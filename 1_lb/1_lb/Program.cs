@@ -54,6 +54,8 @@ namespace _1_lb
                     break;
                 }
             }
+            Console.WriteLine();
+            Console.WriteLine(list[0].ToString());
             Console.ReadKey();
         }
     }

@@ -139,6 +139,28 @@ namespace List
             // чтобы была возможность перебирать элементы связного списка операцией foreach.
             return ((IEnumerable)this).GetEnumerator();
         }
+        public T  this[int index]
+        {
+            get 
+            {
+                if(index >=countOfItems)
+                {
+                    throw new IndexOutOfRangeException("Index out of range!");
+                }
+                var current = first;
+                Item<T> previous = null;
+                for (int i = 0; i < countOfItems; i++)
+                {
+                    if (i == index)
+                    {
+                        return current.CurrentData;
+                    }
+                    previous = current;
+                    current = current.Next;
+                }
+                throw new IndexOutOfRangeException("Index out of range!");
+            }
+        }
         /*public void Delete(T data)
         {
             if (data == null)
