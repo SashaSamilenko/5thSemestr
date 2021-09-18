@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace List
 {
     /// <summary>
-    ///  Class CircularList<T>
+    ///  Class CircularList
     ///  This class is CircularLinkedList!
-    ///  Present CircularLinkedList
+    ///  Present CircularLinkedList!
     /// </summary>
     public class CircularList<T> : System.Collections.Generic.IEnumerable<T>
     {
