@@ -12,6 +12,9 @@ namespace _1_lb
         static void Main(string[] args)
         {
             var list = new CircularList<int>();
+
+            list.Notify += GoMessage;
+
             list.Add(3);
             list.Add(21);
             list.Add(12);
@@ -25,29 +28,42 @@ namespace _1_lb
             list.Add(12);
             list.Add(13);
 
-            int noun = 0;
-            foreach(var x in list)
-            {
-                if (noun < list.Count)
-                {
-                    Console.Write(x.ToString() + " ");
-                    noun++;
-                }
-                else 
-                {
-                    break;
-                }
-            }
-            Console.WriteLine();
-            list.RemoveAt(3);
-            list.Remove(3);
-            noun = 0;
+            Console.WriteLine(list.ElementAt(0));
+
+            Console.WriteLine(list.GetFirst());
+
+            Console.WriteLine(list.GetLast());
+
+            int[] addingList = new int[5] { 1, 2, 3, 4, 5 };
+            list.AddRange(addingList);
+            OutPutList(list);
+
+            list.RemoveAt(0);
+            OutPutList(list);
+
+            list.Remove(5);
+            OutPutList(list);
+
+            list.RemoveFirst();
+            OutPutList(list);
+
+            list.RemoveLast();
+            OutPutList(list);
+
+            list.Clear();
+            OutPutList(list);
+
+            Console.ReadKey();
+        }
+        static void OutPutList(CircularList<int> list)
+        {
+            int counter = 0;
             foreach (var x in list)
             {
-                if (noun < list.Count)
+                if (counter < list.Count)
                 {
                     Console.Write(x.ToString() + " ");
-                    noun++;
+                    counter++;
                 }
                 else
                 {
@@ -55,8 +71,10 @@ namespace _1_lb
                 }
             }
             Console.WriteLine();
-            Console.WriteLine(list[0].ToString());
-            Console.ReadKey();
+        }
+        static void GoMessage(object e,string message)
+        {
+            Console.WriteLine(message);
         }
     }
 }

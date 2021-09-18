@@ -10,7 +10,6 @@ namespace List
     {
         public T CurrentData { get; set; }
         public Item<T> Next { get; set; }
-        //public Item<T> last { get; set; }
         public Item(T data)
         {
             if (data == null)
@@ -20,6 +19,9 @@ namespace List
 
             CurrentData = data;
         }
-
+        public override string ToString()
+        {
+            return CurrentData.ToString();
+        }
     }
 }
