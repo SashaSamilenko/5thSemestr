@@ -43,8 +43,65 @@ namespace List
         /// This is property of count
         /// </summary>
         public int Count
-        { 
+        {
             get => countOfItems;
+        }
+
+        /// <summary>
+        /// This is default costructure of class "CircularList"
+        /// </summary>
+        public CircularList() { }
+
+        /// <summary>
+        /// This is costructure of class "CircularList" with one parameter
+        /// </summary>
+        public CircularList(T data) 
+        {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+            var Item = new Item<T>(data);
+            if (first == null)
+            {
+                first = Item;
+            }
+            else
+            {
+                tail.Next = Item;
+            }
+            tail = Item;
+            tail.Next = first;
+            countOfItems += 1;
+            Notify?.Invoke(this, "New element added to the end of list");
+        }
+
+        /// <summary>
+        /// This is constucture of class "CircularList"
+        /// </summary>
+        /// <param name="elements"></param>
+        public CircularList(IEnumerable<T> elements)
+        {
+            if (elements == null)
+            {
+                throw new ArgumentNullException(nameof(elements));//nameof return name of varible, method or class
+            }
+            for (int i = 0; i < elements.Count(); i++)
+            {
+                var Item = new Item<T>(elements.ElementAt(i));
+                if (first == null)
+                {
+                    first = Item;
+                }
+                else
+                {
+                    tail.Next = Item;
+                }
+                tail = Item;
+                tail.Next = first;
+                countOfItems += 1;
+            }
+            Notify?.Invoke(this, "New elements added to the end of list");
         }
 
         /// <summary>

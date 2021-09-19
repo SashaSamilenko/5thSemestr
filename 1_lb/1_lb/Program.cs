@@ -11,8 +11,7 @@ namespace _1_lb
     {
         static void Main(string[] args)
         {
-            var list = new CircularList<int>();
-
+            var list = new CircularList<int> { 1, 2, 3 };
             list.Notify += GoMessage;
 
             list.Add(3);
