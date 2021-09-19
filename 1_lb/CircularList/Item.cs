@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace List
 {
     /// <summary>
+    /// Class Item
+    /// This class presents item!
     /// This class desribe an item with uncertain type!
     /// </summary>
     /// <typeparam name="T"></typeparam>
