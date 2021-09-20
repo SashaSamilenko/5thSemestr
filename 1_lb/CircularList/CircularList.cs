@@ -255,13 +255,14 @@ namespace List
         /// <param name="data">This is data of deleted element</param>
         public void Remove(T data)
         {
-            if(data==null)
+            if(data == null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
             var current = first;
             Item<T> previous = null;
-            while(current!=null)
+            int counter = 0;
+            while(counter<countOfItems)
             {
                 if (current.CurrentData.Equals(data))
                 {
@@ -292,6 +293,7 @@ namespace List
                     countOfItems -= 1;
                     break;
                 }
+                counter++;
                 previous = current;
                 current = current.Next;
             }
@@ -304,6 +306,7 @@ namespace List
         public void RemoveFirst()
         {
             first = first.Next;
+            countOfItems -= 1;
             Notify?.Invoke(this, "Remove first element of the list");
         }
 
