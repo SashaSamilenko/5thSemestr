@@ -13,17 +13,29 @@ namespace ListTest
             CircularList<int> list;
             //act
             list = new CircularList<int>();
+            //assert
             Assert.AreEqual(0, list.Count, message: "Constructor for class 'CircularList' without parameters works incorrectly");
         }
 
         [Test]
-        [TestCase(null)]
         [TestCase(-4)]
         [TestCase(0)]
         [TestCase(231)]
         [TestCase(-32000)]
         [TestCase(32000)]
-        public void CircularList_ConstructorWithOneParametr(int element)
+        public void CircularList_SetNormalItem(int element)
+        {
+            //arange
+            CircularList<int> list;
+            //act
+            list = new CircularList<int>(element);
+            //assert
+            Assert.AreEqual(1, list.Count, message: "Constructor of CircularList with one parametr works incorrectly");
+        }
+
+        [Test]
+        [TestCase(null)]
+        public void CircularList_SetNullItem_GetArgumentNullException(int element)
         {
             //arange
             CircularList<int> list;
@@ -31,8 +43,6 @@ namespace ListTest
             try
             {
                 list = new CircularList<int>(element);
-                //assert
-                Assert.AreEqual(1, list.Count, message: "Constructor of CircularList with one parametr works incorrectly");
             }
             catch (ArgumentNullException e)
             {
@@ -46,35 +56,23 @@ namespace ListTest
         }
 
         [Test]
-        [TestCase(null)]
-        public void CircularList_ConstructorWithOneNullParametr(Object e)
+        [TestCase(new int[] { 1 })]
+        [TestCase(new int[] { 1, 2, 3, 4, 5, 6, 6, 754, 345, 3, 34, 12 })]
+        [TestCase(new int[] { -12, 12, -24, -23, -12 })]
+        public void CircularList_SetALotOfItems(int[] elements)
         {
             //arange
-            CircularList<Object> list;
+            CircularList<int> list;
             //act
-            try
-            {
-                list = new CircularList<Object>(e);
-                //assert
-                Assert.AreEqual(1, list.Count, message: "Constructor of CircularList with one parametr works incorrectly");
-            }
-            catch (ArgumentNullException y)
-            {
-                //assert
-                Assert.Throws<ArgumentNullException>(
-                delegate
-                {
-                    throw new ArgumentNullException(y.Message);
-                });
-            }
+            list = new CircularList<int>(elements);
+            int expectedCount = elements.Length;
+            //assert
+            Assert.AreEqual(expectedCount, list.Count, message: "Constructor of CircularList with one parametr works incorrectly");
         }
 
         [Test]
         [TestCase(null)]
-        [TestCase(new int[] { 1 })]
-        [TestCase(new int[] { 1, 2, 3, 4, 5, 6, 6, 754, 345, 3, 34, 12 })]
-        [TestCase(new int[] { -12, 12, -24, -23, -12 })]
-        public void CircularList_ConstructorWithALotOfParametrs(int[] elements)
+        public void CircularList_SetALotOfItems_GetArgumentNullException(int[] elements)
         {
             //arange
             CircularList<int> list;
@@ -82,9 +80,6 @@ namespace ListTest
             {
                 //act
                 list = new CircularList<int>(elements);
-                int expectedCount = elements.Length;
-                //assert
-                Assert.AreEqual(expectedCount, list.Count, message: "Constructor of CircularList with one parametr works incorrectly");
             }
             catch (ArgumentNullException e)
             {
@@ -99,11 +94,22 @@ namespace ListTest
 
         [Test]
         [TestCase(0, new int[] { 1 }, 1)]
-        [TestCase(3, new int[] { 1 }, -5)]
         [TestCase(8, new int[] { 0, 1, 1, 22, 434, 1, 23, 4, 12, 13 }, 12)]
+        public void ElementAt_GetElementFromListForIndex_DataElementReturns(int position, int[] elements, int expectedResult)
+        {
+            //arange
+            var list = new CircularList<int>(elements);
+            //act
+            int actResult = list.ElementAt(position);
+            //assert
+            Assert.AreEqual(expectedResult, actResult, message: "ElemetAt works incorrectly");
+        }
+
+        [Test]
+        [TestCase(3, new int[] { 1 }, -5)]
         [TestCase(-1, new int[] { 0, 1, 1, 22, 434, 1, 23, 4, 12, 13 }, -5)]
         [TestCase(31, new int[] { 0, 1, 1, 22, 434, 1, 23, 4, 12, 13 }, -5)]
-        public void ElementAt_GetElementFromListForIndex_DataElementReturns(int position, int[] elements, int expectedResult)
+        public void ElementAt_GetElementFromListForIndex_GetIndexOutOfRangeException(int position, int[] elements, int expectedResult)
         {
             //arange
             var list = new CircularList<int>(elements);
@@ -111,8 +117,6 @@ namespace ListTest
             try
             {
                 int actResult = list.ElementAt(position);
-                //assert
-                Assert.AreEqual(expectedResult, actResult, message: "ElemetAt works incorrectly");
             }
             catch (IndexOutOfRangeException e)
             {
@@ -124,26 +128,6 @@ namespace ListTest
                 });
             }
         }
-
-        /*[Test]
-        [TestCase(2, null, 0)]
-        public void ElementAt_GetElementFromEmptyListForIndex_DataElementReturns(int position, int[] elements, int expectedResult)
-        {
-            //arange
-            try
-            {
-                var list = new CircularList<int>(elements);
-            }
-            catch (ArgumentNullException y)
-            {
-                //assert
-                Assert.Throws<ArgumentNullException>(
-                delegate
-                {
-                    throw new ArgumentNullException(y.Message);
-                });
-            }
-        }*/
 
         [Test]
         [TestCase(new int[] { 1 }, 1)]
@@ -173,23 +157,32 @@ namespace ListTest
         }
 
         [Test]
-        [TestCase(new int[] { 1, 2, 3, 4,121 }, null)]
-        [TestCase(new int[] { }, null)]
         [TestCase(new int[] {}, 3)]
         [TestCase(new int[] { 11, 22, 33, 44,144 }, 3)]
         [TestCase(new int[] { 11, 22, 33, 44,132 }, -23)]
-        public void Add_AddElementToTheEndOfList(int[] elements, int addItem)
+        public void Add_AddElementToTheEndOfList_ListWithNewItemReturn(int[] elements, int addItem)
         {
             //arange
             var list = new CircularList<int>(elements);
             int expectedCount = list.Count + 1;
             //act
+            list.Add(addItem);
+            int actCount = list.Count;
+            //assets
+            Assert.AreEqual(expectedCount, actCount, message: "Add works incorrectly");
+        }
+
+        [Test]
+        [TestCase(new int[] { 1, 2, 3, 4, 121 }, null)]
+        [TestCase(new int[] { }, null)]
+        public void Add_AddNullElementToTheEndOfList_GetArgumentNullException(int[] elements, int addItem)
+        {
+            //arange
+            var list = new CircularList<int>(elements);
+            //act
             try
             {
                 list.Add(addItem);
-                int actCount = list.Count;
-                //assets
-                Assert.AreEqual(expectedCount, actCount, message: "Add works incorrectly");
             }
             catch (ArgumentNullException e)
             {
@@ -203,22 +196,31 @@ namespace ListTest
         }
 
         [Test]
-        [TestCase(new int[] { 1, 2, 3, 4 }, null)]
         [TestCase(new int[] { 11, 22, 33, 44 }, new int[] { 88 })]
         [TestCase(new int[] { 11, 22, 33, 44 }, new int[] { 23, 223, 4211, 45, 34 })]
         [TestCase(new int[] { }, new int[] { 23, 223, 4211, 45, 34 })]
-        public void AddRange_AddElementsToTheEndOfList(int[] stateElements, int[] addElements)
+        public void AddRange_AddElementsToTheEndOfList_ListWithNewItemsReturn(int[] stateElements, int[] addElements)
+        {
+            //arange
+            var list = new CircularList<int>(stateElements);
+            //act
+            int expectedCount = list.Count + addElements.Length;
+            list.AddRange(addElements);
+            int actCount = list.Count;
+            //assert
+            Assert.AreEqual(expectedCount, actCount, message: "AddRange works incorrectly");
+        }
+
+        [Test]
+        [TestCase(new int[] { 1, 2, 3, 4 }, null)]
+        public void AddRange_AddElementsToTheEndOfList_GetArgumentNullException(int[] stateElements, int[] addElements)
         {
             //arange
             var list = new CircularList<int>(stateElements);
             //act
             try
             {
-                int expectedCount = list.Count + addElements.Length;
                 list.AddRange(addElements);
-                int actCount = list.Count;
-                //assert
-                Assert.AreEqual(expectedCount, actCount, message: "AddRange works incorrectly");
             }
             catch (ArgumentNullException e)
             {
@@ -229,34 +231,35 @@ namespace ListTest
                     throw new ArgumentNullException(e.Message);
                 });
             }
-            catch (NullReferenceException f)
-            {
-                //assert
-                Assert.Throws<NullReferenceException>(
-                delegate
-                {
-                    throw new NullReferenceException(f.Message);
-                });
-            }
         }
 
         [Test]
-        [TestCase(null, new int[] { 31, 12, 32, 41,23,1232 })]
-        [TestCase(33, new int[] { 1, 2, 3, 4, 51 })]
-        [TestCase(-5, new int[] { 11, 22, 33, 44, 232 })]
+        [TestCase(5, new int[] { 31, 12, 32, 41, 23, 1232 })]
         [TestCase(2, new int[] { 11, 22, 33, 44, 111 })]
         public void RemoveAt_RemoveElementOfTheListAtIndex_ListWithoutElementReturn(int index, int[] elements)
         {
             //averrage
             var list = new CircularList<int>(elements);
             int expectedLength = elements.Length - 1;
+            //act
+            list.RemoveAt(index);
+            int actLength = list.Count;
+            //assert
+            Assert.AreEqual(expectedLength, actLength, message: "RemoveAt works incorrectly");
+        }
+
+        [Test]
+        [TestCase(null, new int[] { 31, 12, 32, 41, 23, 1232 })]
+        [TestCase(33, new int[] { 1, 2, 3, 4, 51 })]
+        [TestCase(-5, new int[] { 11, 22, 33, 44, 232 })]
+        public void RemoveAt_RemoveElementOfTheListAtIndex_GetIndexOutOfRangeException(int index, int[] elements)
+        {
+            //averrage
+            var list = new CircularList<int>(elements);
             try
             {
                 //act
                 list.RemoveAt(index);
-                int actLength = list.Count;
-                //assert
-                Assert.AreEqual(expectedLength, actLength, message: "RemoveAt works incorrectly");
             }
             catch (IndexOutOfRangeException e)
             {
@@ -267,35 +270,35 @@ namespace ListTest
                     throw new IndexOutOfRangeException(e.Message);
                 });
             }
-            catch (NullReferenceException e)
-            {
-                //assert
-                Assert.Throws<NullReferenceException>(
-                delegate
-                {
-                    throw new NullReferenceException(e.Message);
-                });
-            }
+        }
+
+        [Test]
+        [TestCase(11, new int[] { 11, 22, 33, 44,231,332 })]
+        [TestCase(44, new int[] { 11, 22, 33, 44, 231, 332 })]
+        [TestCase(-144, new int[] { -144, -13, -1, 0, 11, 22, 33, 44, 231, 332 })]
+        public void Remove_RemoveElementWithData_ListWithoutFirstApperanceOfElementReturn(int data, int[] elements)
+        {
+            //averrage
+            var list = new CircularList<int>(elements);
+            int expectedLength = elements.Length >0?elements.Length - 1:0;
+            //act
+            list.Remove(data);
+            int actLength = list.Count;
+            //assert
+            Assert.AreEqual(expectedLength, actLength, message: "Remove works incorrectly");
         }
 
         [Test]
         [TestCase(null, new int[] { 0, 11, 23, 37, 44, 242, 333 })]
         [TestCase(null, new int[] { })]
-        [TestCase(11, new int[] { 11, 22, 33, 44,231,332 })]
-        [TestCase(44, new int[] { 11, 22, 33, 44, 231, 332 })]
-        [TestCase(-144, new int[] { -144, -13, -1, 0, 11, 22, 33, 44, 231, 332 })]
-        public void Remove_RemoveFirstElementOfTheListWithData_ListWithoutElementReturn(int data, int[] elements)
+        public void Remove_RemoveElementWithData_GetArgumentNullException(int data, int[] elements)
         {
             //averrage
             var list = new CircularList<int>(elements);
-            int expectedLength = elements.Length >0?elements.Length - 1:0;
             try
             {
                 //act
                 list.Remove(data);
-                int actLength = list.Count;
-                //assert
-                Assert.AreEqual(expectedLength, actLength, message: "Remove works incorrectly");
             }
             catch (ArgumentNullException e)
             {

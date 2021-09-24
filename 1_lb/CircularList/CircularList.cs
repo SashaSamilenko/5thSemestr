@@ -15,14 +15,14 @@ namespace List
     public class CircularList<T> : System.Collections.Generic.IEnumerable<T>
     {
         /// <summary>
-        /// This is delegate for notify
+        /// This is empty list delegate
         /// </summary>
-        public delegate void CircularLinkedListHandler(object sender, string message);
+        public delegate void EmptyListHandler(object sender, CircleEventArgs args);
 
         /// <summary>
-        /// This is event
+        /// This is add new element event
         /// </summary>
-        public event CircularLinkedListHandler Notify;
+        public event EmptyListHandler emptyListEvent;
 
         /// <summary>
         /// This is reference to the first element of the list
@@ -73,7 +73,6 @@ namespace List
             tail = Item;
             tail.Next = first;
             countOfItems += 1;
-            Notify?.Invoke(this, "New element added to the end of list");
         }
 
         /// <summary>
@@ -101,7 +100,6 @@ namespace List
                 tail.Next = first;
                 countOfItems += 1;
             }
-            Notify?.Invoke(this, "New elements added to the end of list");
         }
 
         /// <summary>
@@ -169,7 +167,6 @@ namespace List
             tail = Item;
             tail.Next = first;
             countOfItems += 1;
-            Notify?.Invoke(this, "New element added to the end of list");
         }
 
         /// <summary>
@@ -197,7 +194,6 @@ namespace List
                 tail.Next = first;
                 countOfItems += 1;
             }
-            Notify?.Invoke(this, "New elements added to the end of list");
         }
 
         /// <summary>
@@ -246,7 +242,7 @@ namespace List
                 previous = current;
                 current = current.Next;
             }
-            Notify?.Invoke(this, $"Delete element from position of {index}");
+            emptyListEventMethod(countOfItems);
         }
 
         /// <summary>
@@ -297,7 +293,7 @@ namespace List
                 previous = current;
                 current = current.Next;
             }
-            Notify?.Invoke(this, $"Delete element with data of {data}");
+            emptyListEventMethod(countOfItems);
         }
 
         /// <summary>
@@ -307,7 +303,7 @@ namespace List
         {
             first = first.Next;
             countOfItems -= 1;
-            Notify?.Invoke(this, "Remove first element of the list");
+            emptyListEventMethod(countOfItems);
         }
 
         /// <summary>
@@ -351,7 +347,7 @@ namespace List
                 previous = current;
                 current = current.Next;
             }
-            Notify?.Invoke(this, "Remove last element of the list");
+            emptyListEventMethod(countOfItems);
         }
 
         /// <summary>
@@ -362,7 +358,19 @@ namespace List
             first = null;
             tail = null;
             countOfItems = 0;
-            Notify?.Invoke(this, "Remove all elements of the list");
+            emptyListEventMethod(countOfItems);
+        }
+
+        /// <summary>
+        /// This method check length of list and throw event if length equals zero
+        /// </summary>
+        private void emptyListEventMethod(int count)
+        {
+            if (countOfItems == 0)
+            {
+                CircleEventArgs args = new CircleEventArgs(count);
+                emptyListEvent?.Invoke(this, args);
+            }
         }
 
         /// <summary>

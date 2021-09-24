@@ -34,7 +34,6 @@ namespace List
             {
                 throw new ArgumentNullException(nameof(data));
             }
-
             CurrentData = data;
         }
         /// <summary>
