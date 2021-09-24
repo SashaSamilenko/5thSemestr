@@ -242,7 +242,7 @@ namespace List
                 previous = current;
                 current = current.Next;
             }
-            emptyListEventMethod(countOfItems);
+            emptyListEventMethod();
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace List
                 previous = current;
                 current = current.Next;
             }
-            emptyListEventMethod(countOfItems);
+            emptyListEventMethod();
         }
 
         /// <summary>
@@ -303,7 +303,7 @@ namespace List
         {
             first = first.Next;
             countOfItems -= 1;
-            emptyListEventMethod(countOfItems);
+            emptyListEventMethod();
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace List
                 previous = current;
                 current = current.Next;
             }
-            emptyListEventMethod(countOfItems);
+            emptyListEventMethod();
         }
 
         /// <summary>
@@ -358,17 +358,17 @@ namespace List
             first = null;
             tail = null;
             countOfItems = 0;
-            emptyListEventMethod(countOfItems);
+            emptyListEventMethod();
         }
 
         /// <summary>
         /// This method check length of list and throw event if length equals zero
         /// </summary>
-        private void emptyListEventMethod(int count)
+        private void emptyListEventMethod()
         {
             if (countOfItems == 0)
             {
-                CircleEventArgs args = new CircleEventArgs(count);
+                CircleEventArgs args = new CircleEventArgs(countOfItems);
                 emptyListEvent?.Invoke(this, args);
             }
         }
