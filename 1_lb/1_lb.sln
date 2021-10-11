@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1_lb", "1_lb\1_lb.csproj", "{B4ABE587-6C3B-4AEA-A122-814989758714}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "List", "CircularList\List.csproj", "{11DC066D-379C-4A2F-8E26-BA5F8ADED32F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircularList", "CircularList\CircularList.csproj", "{11DC066D-379C-4A2F-8E26-BA5F8ADED32F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListTest", "ListTest\ListTest.csproj", "{EE876F81-8D01-4BF1-A44E-F48239F4AE8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ListTest", "ListTest\ListTest.csproj", "{EE876F81-8D01-4BF1-A44E-F48239F4AE8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

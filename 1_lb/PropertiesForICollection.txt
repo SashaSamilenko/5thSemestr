@@ -1,0 +1,9 @@
+        /// <summary>
+        /// Gets a value indicating whether access to the ICollection is synchronized (thread safe).
+        /// </summary>
+        bool System.Collections.ICollection.IsSynchronized { get; }
+
+        /// <summary>
+        /// Gets an object that can be used to synchronize access to the ICollection.
+        /// </summary>
+        object System.Collections.ICollection.SyncRoot { get; }

@@ -4,29 +4,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace List
+namespace CircularList
 {
     /// <summary>
-    /// Class CircleEventArgs
-    /// This class is follower of EventArgs
+    /// Class CircleEventArgs.
+    /// This class is follower of EventArgs and contains recived information.
     /// </summary>
-    public class CircleEventArgs: EventArgs
+    public class CircleEventArgs: System.EventArgs
     {
-        private int count;
         /// <summary>
-        /// This is property of count
+        /// Private field of recived information
         /// </summary>
-        public int Count
-        { 
-            get=>count;
-        }
+        private readonly Int32 count;
+
         /// <summary>
         /// This is  constructure with parameter for class "CircleEventArgs"
         /// </summary>
         /// <param name="count"></param>
-        public CircleEventArgs(int count)
+        public CircleEventArgs(Int32 count)
         {
             this.count = count;
         }
+
+        /// <summary>
+        /// This is property of count
+        /// </summary>
+        public Int32 Count
+        { 
+            get 
+            { 
+                return count; 
+            }
+        }
+
     }
 }

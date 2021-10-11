@@ -4,12 +4,12 @@ using System.Collections;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace List
+namespace CircularList
 {
     /// <summary>
     /// Class Item
-    /// This class presents item!
-    /// This class desribe an item with uncertain type!
+    /// This class presents node!
+    /// This class desribe an node with uncertain type!
     /// </summary>
     /// <typeparam name="T"></typeparam>
     internal class Item<T>
@@ -20,9 +20,19 @@ namespace List
         public T CurrentData { get; set; }
 
         /// <summary>
+        /// This field indecates to the previous elements
+        /// </summary>
+        public Item<T> Previous { get; set; }
+
+        /// <summary>
         /// This field indecates to the next elements
         /// </summary>
         public Item<T> Next { get; set; }
+
+        /// <summary>
+        /// This is constructure without the parametrs
+        /// </summary>
+        public Item(){}
 
         /// <summary>
         /// This is constructure

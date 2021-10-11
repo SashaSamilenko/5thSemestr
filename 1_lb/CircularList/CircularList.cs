@@ -5,47 +5,67 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace List
+namespace CircularList
 {
     /// <summary>
     ///  Class CircularList
     ///  This class is CircularLinkedList!
     ///  Present CircularLinkedList!
     /// </summary>
-    public class CircularList<T> : System.Collections.Generic.IEnumerable<T>
+    public class CircularList<T> : IEnumerable, ICollection, IEnumerable<T>, ICollection<T>//ICollection<T>, IEnumerable<T>, IEnumerable, ICollection, IList<T>, IList
     {
         /// <summary>
-        /// This is empty list delegate
+        /// EventHandler - generation delegate.
+        /// It is mean that receivers of information have to give a call back method with prototype
+        /// that matches type-delegate EventHandler CircleEventArgs
         /// </summary>
-        public delegate void EmptyListHandler(object sender, CircleEventArgs args);
-
-        /// <summary>
-        /// This is add new element event
-        /// </summary>
-        public event EmptyListHandler emptyListEvent;
+        public event EventHandler<CircleEventArgs> emptyListEvent;
 
         /// <summary>
         /// This is reference to the first element of the list
         /// </summary>
-        private Item<T> first = null;
+        private Item<T> head = null;
 
         /// <summary>
         /// This is reference to the last element of the list
+        /// </summary>
+        private Item<T> next = null;//Loss
+
+        /// <summary>
+        /// This is reference to the previous element of the list
         /// </summary>
         private Item<T> tail = null;
 
         /// <summary>
         /// This is count of elements of the list
         /// </summary>
-        private int countOfItems = 0;
+        private int count = 0;
 
         /// <summary>
         /// This is property of count
         /// </summary>
         public int Count
         {
-            get => countOfItems;
+            get => count;
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the collection is read-only
+        /// </summary>
+        public bool IsReadOnly
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets an object that can be used to synchronize access to the ICollection.
+        /// </summary>
+        public object SyncRoot => throw new NotImplementedException();
+
+        /// <summary>
+        /// Gets a value indicating whether access to the Array is synchronized (thread safe).
+        /// </summary>
+        public bool IsSynchronized => throw new NotImplementedException();
 
         /// <summary>
         /// This is default costructure of class "CircularList"
@@ -55,24 +75,20 @@ namespace List
         /// <summary>
         /// This is costructure of class "CircularList" with one parameter
         /// </summary>
-        public CircularList(T data) 
+        public CircularList(T data)
         {
             if (data == null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
-            var Item = new Item<T>(data);
-            if (first == null)
-            {
-                first = Item;
-            }
-            else
-            {
-                tail.Next = Item;
-            }
-            tail = Item;
-            tail.Next = first;
-            countOfItems += 1;
+            var item = new Item<T>(data);
+            head = item;
+            head.Next = head;
+            head.Previous = head;
+            tail = head;
+            tail.Next = head;
+            tail.Previous = head;
+            count += 1;
         }
 
         /// <summary>
@@ -83,22 +99,35 @@ namespace List
         {
             if (elements == null)
             {
-                throw new ArgumentNullException(nameof(elements));//nameof return name of varible, method or class
+                throw new ArgumentNullException(nameof(elements));
             }
+            Item<T> tempItem = null;
             for (int i = 0; i < elements.Count(); i++)
             {
-                var Item = new Item<T>(elements.ElementAt(i));
-                if (first == null)
+                var item = new Item<T>(elements.ElementAt(i));
+                if (head == null)
                 {
-                    first = Item;
+                    head = item;
+                    head.Next = head;
+                    head.Previous = head;
+                    tail = head;
+                    tail.Next = head;
+                    tail.Previous = head;
                 }
                 else
                 {
-                    tail.Next = Item;
+                    tail.Next = item;
+                    tempItem = tail;
+                    tail = item;
+                    tail.Previous = tempItem;
+                    tail.Next = head;
+                    head.Previous = tail;
+                    if(i == 1)
+                    {
+                        head.Next = item;
+                    }
                 }
-                tail = Item;
-                tail.Next = first;
-                countOfItems += 1;
+                count += 1;
             }
         }
 
@@ -109,13 +138,13 @@ namespace List
         /// <returns>Element on the index posotion</returns>
         public T ElementAt(int index)
         {
-            if (index >= countOfItems)
+            if (index >= count || index < 0)
             {
                 throw new IndexOutOfRangeException("Index out of range!");
             }
-            var current = first;
+            var current = head;
             Item<T> previous = null;
-            for (int i = 0; i < countOfItems; i++)
+            for (int i = 0; i < count; i++)
             {
                 if (i == index)
                 {
@@ -124,7 +153,7 @@ namespace List
                 previous = current;
                 current = current.Next;
             }
-            throw new IndexOutOfRangeException("Index out of range!");
+            return default(T);
         }
 
         /// <summary>
@@ -133,7 +162,7 @@ namespace List
         /// <returns>First element</returns>
         public T GetFirst()
         {
-            return first.CurrentData;
+            return head.CurrentData;
         }
 
         /// <summary>
@@ -146,54 +175,259 @@ namespace List
         }
 
         /// <summary>
-        /// This method add element to the end
+        /// Add new item to the end of list.
         /// </summary>
         /// <param name="data">This is data, which will be adding to the list</param>
         public void Add(T data)
         {
-            if(data==null)
+            if (data == null)
             {
-                throw new ArgumentNullException(nameof(data));//nameof return name of varible, method or class
+                throw new ArgumentNullException(nameof(data));
             }
-            var Item = new Item<T>(data);
-            if(first==null)
+            var item = new Item<T>(data);
+            if (head == null)
             {
-                first = Item;
+                head = item;
+                head.Next = head;
+                head.Previous = head;
+                tail = head;
+                tail.Next = head;
+                tail.Previous = head;
             }
             else
             {
-                tail.Next = Item;
-            }
-            tail = Item;
-            tail.Next = first;
-            countOfItems += 1;
-        }
-
-        /// <summary>
-        /// This method add elements to the end
-        /// </summary>
-        /// <param name="collections">This is collections of data, which will be adding to the list</param>
-        public void AddRange(IEnumerable<T> collections)
-        {
-            if (collections == null)
-            {
-                throw new ArgumentNullException(nameof(collections));//nameof return name of varible, method or class
-            }
-            for (int i = 0; i < collections.Count(); i++)
-            {
-                var Item = new Item<T>(collections.ElementAt(i));
-                if (first == null)
+                if (tail == head)
                 {
-                    first = Item;
+                    tail = item;
+                    head.Next = tail;
+                    head.Previous = tail;
+                    tail.Next = head;
+                    tail.Previous = head;
                 }
                 else
                 {
-                    tail.Next = Item;
+                    Item<T> tItem = null;
+                    tail.Next = item;
+                    tItem = tail;
+                    tail = item;
+                    tail.Next = head;
+                    tail.Previous = tItem;
                 }
-                tail = Item;
-                tail.Next = first;
-                countOfItems += 1;
+                //tail.Next = item;
             }
+            count += 1;
+        }
+
+        /// <summary>
+        /// Add new items to the end of list.
+        /// </summary>
+        /// <param name="elements">This is collections of data, which will be adding to the list</param>
+        public void AddRange(IEnumerable<T> elements)
+        {
+            if (elements == null)
+            {
+                throw new ArgumentNullException(nameof(elements));
+            }
+            Item<T> tempItem = null;
+            for (int i = 0; i < elements.Count(); i++)
+            {
+                var item = new Item<T>(elements.ElementAt(i));
+                if (head == null)
+                {
+                    head = item;
+                    head.Next = head;
+                    head.Previous = head;
+                    tail = head;
+                    tail.Next = head;
+                    tail.Previous = head;
+                }
+                else
+                {
+                    tail.Next = item;
+                    tempItem = tail;
+                    tail = item;
+                    tail.Previous = tempItem;
+                    tail.Next = head;
+                    head.Previous = tail;
+                    if (i == 1)
+                    {
+                        head.Next = item;
+                    }
+                }
+                count += 1;
+            }
+        }
+
+        /// <summary>
+        /// Adds a new node or value at position as index
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="position"></param>
+        public void AddAt(T data, int position)
+        {
+            if (position >= count || position < 0)
+            {
+                throw new IndexOutOfRangeException("Position out of range!");
+            }
+            if(data == null)
+            {
+                throw new NullReferenceException("First parametr cannot be null reference.");
+            }
+            Item<T> item = new Item<T>(data);
+            Item<T> current = head;
+            Item<T> previous = null;
+            Int32 i = 0;
+            while (i != position)
+            {
+                previous = current;
+                current = current.Next;
+                i++;
+            }
+            if(i == 0)
+            {
+                if (head == null)
+                {
+                    head = item;
+                    tail = head;
+                }
+                else 
+                {
+                    
+                    tail.Next = item;
+                    head = item;
+                    head.Previous = tail;
+                    head.Next = current;
+                    current.Previous = head;
+                }
+            }
+            else
+            {
+                if(i==count-1)
+                {
+                    current.Next = item;
+                    tail = item;
+                    tail.Previous = current;
+                    tail.Next = head;
+                }
+                else
+                {
+                    previous.Next = item;
+                    item.Previous = previous;
+                    item.Next = current;
+                    current.Previous = item;
+                }
+            }
+            count++;
+        }
+
+        /// <summary>
+        /// This method remove element with certain data
+        /// </summary>
+        /// <param name="data">This is data of deleted element</param>
+        public bool Remove(T data)
+        {
+            bool removing = false;
+            if(data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+            Item<T> current = head;
+            Item<T> previous = null;
+            int counter = 0;
+            while(counter < count && !current.CurrentData.Equals(data))
+            {
+                previous = current;
+                current = current.Next;
+                counter++;
+            }
+            if(counter == count)
+            {
+                return false;
+            }
+            if (counter == 0)
+            {
+                if (count == 1)
+                {
+                    head = null;
+                    tail = null;
+                }
+                else
+                {
+                    head = head.Next;
+                    tail.Next = head;
+                    head.Previous = tail;
+                }
+            }
+            else
+            {
+                if (counter == count - 1)
+                {
+                    tail = previous;
+                    tail.Next = head;
+                    head.Previous = tail;
+                }
+                else
+                {
+                    current = current.Next;
+                    previous.Next = current;
+                    current.Previous = previous;
+                }
+            }
+            removing = true;
+            count -= 1;
+            CircleEventArgs args = new CircleEventArgs(count);
+            EmptyListEventMethod(args);
+            return removing;
+        }
+
+        /// <summary>
+        /// This method remove first element of the list
+        /// </summary>
+        public void RemoveFirst()
+        {
+            if(count == 1)
+            {
+                head = null;
+                tail = null;
+            }
+            else
+            {
+                head = head.Next;
+                tail.Next = head;
+                head.Previous = tail;
+            }
+            count -= 1;
+            CircleEventArgs args = new CircleEventArgs(count);
+            EmptyListEventMethod(args);
+        }
+
+        /// <summary>
+        /// This method remove last element of the list
+        /// </summary>
+        public void RemoveLast()
+        {
+            if(count == 0)
+            {
+                CircleEventArgs arr = new CircleEventArgs(count);
+                EmptyListEventMethod(arr);
+            }
+            else
+            {
+                if (count == 1)
+                {
+                    head = null;
+                    tail = null;
+                }
+                else
+                {
+                    tail = tail.Previous;
+                    tail.Next = head;
+                    head.Previous = tail;
+                }
+            }
+            count -= 1;
+            CircleEventArgs args = new CircleEventArgs(count);
+            EmptyListEventMethod(args);
         }
 
         /// <summary>
@@ -202,152 +436,43 @@ namespace List
         /// <param name="index">This is position of deleted element</param>
         public void RemoveAt(int index)
         {
-            if (index < 0 || index >= countOfItems)
+            if (index < 0 || index >= count)
             {
                 throw new IndexOutOfRangeException("Index out of range!");
             }
-            var current = first;
             Item<T> previous = null;
-            for(int i=0; i<countOfItems; i++)
+            Item<T> current = head;
+            Int32 i = 0;
+            while (i != index)
             {
-                if(i==index)
-                {
-                    if (previous != null)
-                    {
-                        if (current.Next == first)
-                        {
-                            tail = previous;
-                            tail.Next = first;
-                        }
-                        else
-                        {
-                            previous.Next = current.Next;
-                        }
-                    }
-                    else
-                    {
-                        first = current.Next;
-                        if(first==null)
-                        {
-                            tail = null;
-                        }
-                        else 
-                        {
-                            tail.Next = first;
-                        }
-                    }
-                    countOfItems -= 1;
-                    break;
-                }
                 previous = current;
                 current = current.Next;
+                i++;
             }
-            emptyListEventMethod();
-        }
-
-        /// <summary>
-        /// This method remove element with certain data
-        /// </summary>
-        /// <param name="data">This is data of deleted element</param>
-        public void Remove(T data)
-        {
-            if(data == null)
+            if (i == 0)
             {
-                throw new ArgumentNullException(nameof(data));
+                head = head.Next;
+                tail.Next = head;
+                head.Previous = tail;
             }
-            var current = first;
-            Item<T> previous = null;
-            int counter = 0;
-            while(counter<countOfItems)
+            else
             {
-                if (current.CurrentData.Equals(data))
+                if (i == count - 1)
                 {
-                    if (previous != null)
-                    {
-                        if (current.Next == first)
-                        {
-                            tail = previous;
-                            tail.Next = first;
-                        }
-                        else
-                        {
-                            previous.Next = current.Next;
-                        }
-                    }
-                    else
-                    {
-                        first = current.Next;
-                        if (first == null)
-                        {
-                            tail = null;
-                        }
-                        else
-                        {
-                            tail.Next = first;
-                        }
-                    }
-                    countOfItems -= 1;
-                    break;
+                    tail = previous;
+                    tail.Next = head;
+                    head.Previous = tail;
                 }
-                counter++;
-                previous = current;
-                current = current.Next;
-            }
-            emptyListEventMethod();
-        }
-
-        /// <summary>
-        /// This method remove first element of the list
-        /// </summary>
-        public void RemoveFirst()
-        {
-            first = first.Next;
-            countOfItems -= 1;
-            emptyListEventMethod();
-        }
-
-        /// <summary>
-        /// This method remove last element of the list
-        /// </summary>
-        public void RemoveLast()
-        {
-            var current = first;
-            Item<T> previous = null;
-            for (int i = 0; i < countOfItems; i++)
-            {
-                if (i == countOfItems-1)
+                else
                 {
-                    if (previous != null)
-                    {
-                        if (current.Next == first)
-                        {
-                            tail = previous;
-                            tail.Next = first;
-                        }
-                        else
-                        {
-                            previous.Next = current.Next;
-                        }
-                    }
-                    else
-                    {
-                        first = current.Next;
-                        if (first == null)
-                        {
-                            tail = null;
-                        }
-                        else
-                        {
-                            tail.Next = first;
-                        }
-                    }
-                    countOfItems -= 1;
-                    break;
+                    current = current.Next;
+                    previous.Next = current;
+                    current.Previous = previous;
                 }
-                previous = current;
-                current = current.Next;
             }
-            emptyListEventMethod();
+            count -= 1;
+            CircleEventArgs args = new CircleEventArgs(count);
+            EmptyListEventMethod(args);
         }
 
         /// <summary>
@@ -355,20 +480,107 @@ namespace List
         /// </summary>
         public void Clear()
         {
-            first = null;
-            tail = null;
-            countOfItems = 0;
-            emptyListEventMethod();
+            head = null;
+            next = null;
+            count = 0;
+            CircleEventArgs args = new CircleEventArgs(count);
+            EmptyListEventMethod(args);
+        }
+
+        /// <summary>
+        /// Determines if an item is in the collection
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool Contains(T item)
+        {
+            if(count == 0)
+            {
+                return false;
+            }
+            bool found = false;
+            var jumper = head;
+            do
+            {
+                if (Equals(jumper.CurrentData, item))
+                {
+                    found = true;
+                    break;
+                }
+                else
+                {
+                    jumper = jumper.Next;
+                }
+            }
+            while (!Equals(jumper, head));
+            return found;
+        }
+
+        /// <summary>
+        /// Copies the elements of the ICollection to an Array, starting at a particular Array index.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="index"></param>
+        public void CopyTo(Array array, int index)
+        {
+            this.CopyTo((T[])array, index);
+        }
+
+        /// <summary>
+        /// Copies the elements of the ICollection to an Array, starting at a particular Array index.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="arrayIndex"></param>
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            if (array == null)
+                throw new NullReferenceException(nameof(array));
+            if (arrayIndex < 0)
+                throw new ArgumentOutOfRangeException("The starting array index cannot be less then zero.");
+            if (Count >= array.Length - arrayIndex + 1)
+                throw new ArgumentException("The destination array has fewer elements than the collection or index more then allowable value.");
+            var jumper = head;
+            for (int i = 0; i < count; i++)
+            {
+                array[i + arrayIndex] = jumper.CurrentData;
+                jumper = jumper.Next;
+            }
+        }
+
+        /// <summary>
+        /// Reverses the order of the elements in the entire System.Collections.Generic.List`1.
+        /// </summary>
+        public void Reverse()
+        {
+            if(count == 0)
+            {
+                return;
+            }
+            Item<T> current = head;
+            Item<T> previous = null;
+            Item<T> tempo = null;
+            for (Int32 i = 0; i < count; i++)
+            {
+                previous = current;
+
+                tempo = current.Next;
+                current.Next = current.Previous;
+                current.Previous = tempo;
+
+                current = previous.Next;
+            }
+            head = head.Next;
+            tail = tail.Next;
+
         }
 
         /// <summary>
         /// This method check length of list and throw event if length equals zero
         /// </summary>
-        private void emptyListEventMethod()
+        private void EmptyListEventMethod(CircleEventArgs args)
         {
-            if (countOfItems == 0)
+            if (args.Count == 0)
             {
-                CircleEventArgs args = new CircleEventArgs(countOfItems);
                 emptyListEvent?.Invoke(this, args);
             }
         }
@@ -379,12 +591,17 @@ namespace List
         /// /// <returns>Elements one by one!</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            var current = first;
-            while (current != null)
+            var current = head;
+            do
             {
+                if(current == null)
+                {
+                    yield break;
+                }
                 yield return current.CurrentData;
                 current = current.Next;
             }
+            while (current != head);
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
