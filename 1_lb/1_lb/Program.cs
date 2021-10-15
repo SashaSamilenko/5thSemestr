@@ -11,87 +11,37 @@ namespace _1_lb
     {
         static void Main(string[] args)
         {
-            var t_list = new CircularList<int>();
-            t_list.AddRange(new int[] { 123, 23, 2, 12, 2, 3, 2, 1, 2, 3 });
-            OutPutList(t_list);
-            t_list.Reverse();
-            OutPutList(t_list);
+            //Int32Example();
 
+            //DoubleExample();
 
-            CircularList<Int32> newL = new CircularList<Int32>(new Int32[] { 1,2,3,4,5,6,7,8,9,10});
-            newL.emptyListEvent += OutputMessageAddInt32Item;
-            newL.Add(11);
-            newL.AddRange(new Int32[] { 12, 13, 14 });
-            newL.AddAt(1221, 12);
-            newL.RemoveAt(0);
-            newL.RemoveAt(13);
-            OutPutList(newL);
-
-            newL.Remove(1221);
-            newL.RemoveFirst();
-            newL.RemoveLast();
-            OutPutList(newL);
-
-            newL.Reverse();
-            OutPutList(newL);
-            Console.WriteLine(newL.Contains(8));
-            Console.WriteLine(newL.Contains(13));
-
-            Int32[] testArray = new Int32[] { 23, 23, 12, 12 };
-            CircularList<Int32> newL2 = new CircularList<Int32>(new Int32[] {1,2});
-            newL2.emptyListEvent += OutputMessageAddInt32Item;
-            //OutPutList(newL2);
-            //newL2.Remove(1);
-            //OutPutList(newL2);
-            //OutPutList(newL2);
-            newL2.Reverse();
-            OutPutList(newL2);
-            //newL2.CopyTo(testArray, 2);
-            //OutPutArrgs(testArray);
-
-            //Int32 circular list
-
-            int[] addingList = new int[] { 5, 4, 3, 2, 1, 22, 33, 44, 55, 66, 77, 88, 99, 101 };
-            OutPutArrgs(addingList);
-
-            /*CircularList<int> listCopy = new CircularList<int> { 1, 2, 3, 4, 5 };
-            listCopy.CopyTo(addingList, 4);
-             OutPutArrgs(addingList);
-            */
-
-            var list = new CircularList<int>();
-            list.emptyListEvent += OutputMessageAddInt32Item;
+            Console.ReadKey();
+        }
+        static void Int32Example()
+        {
+            var list = new CircularList<int>() { 1, 2, 3, 4, 5 };//(new int[] { 1, 2, 3, 4, 5 });
+            list.emptyListEvent += OutputMessageAddItem;
+            OutPutList(list);
 
             //Add values to the end of CircularList
-            list.AddRange(addingList);
-            OutPutList(list);
-
-            //Add value to the list on position
-            list.AddAt(12, 0);
-            list.AddAt(21, list.Count - 1);
-            list.AddAt(23, list.Count - 2);
-            list.AddAt(8888, 7);
-            OutPutList(list);
-            //Contains
-            //Console.WriteLine(list.Contains(1223));
-            //Console.WriteLine(list.Contains(4));
+            /*int[] addingList = new int[] { 5, 4, 3, 2, 1, 22, 33, 44, 55, 66, 77, 88, 99, 101 };
+            OutPutArrgs(addingList);
+            List.AddRange(addingList);
+            OutPutList(list);*/
 
             //Add-method
             /*list.Add(3);
             list.Add(21);
             list.Add(12);
             list.Add(14);
-
             OutPutList(list);*/
 
-            //Get element for index
-            //Console.WriteLine(list.ElementAt(0));
-
-            //Get first element
-            //Console.WriteLine(list.GetFirst());
-
-            //Get last element
-            //Console.WriteLine(list.GetLast());
+            //Add value to the list on position
+            /*list.AddAt(12, 0);
+            list.AddAt(21, list.Count - 1);
+            list.AddAt(23, list.Count - 2);
+            list.AddAt(8888, 7);
+            OutPutList(list);*/
 
             //Remove element from position
             /*list.RemoveAt(0);
@@ -113,18 +63,43 @@ namespace _1_lb
             /*list.Clear();
             OutPutList(list);*/
 
-            //Double
-            /*var listD = new CircularList<double>();
-            listD.emptyListEvent += OutputMessageAddDoubleItem;
+            //Contains
+            //Console.WriteLine(list.Contains(1223));
+            //Console.WriteLine(list.Contains(4));
 
-            double[] addingListDouble = { 2.323221, 2.1212, 312.23, 4.42, 5.121 };
-            listD.AddRangeLast(addingListDouble);
-            OutPutListD(listD);
+            //Get element for index
+            //Console.WriteLine(list.ElementAt(0));
 
-            Console.WriteLine(listD.Contains(4.42));
-            Console.WriteLine(listD.Contains(1223.21));
+            //Get first element
+            //Console.WriteLine(list.GetFirst());
 
-            listD.Add(3.23);
+            //Get last element
+            //Console.WriteLine(list.GetLast());
+
+            //Method Reverse()
+            /*list.Reverse();
+            OutPutList(list);*/
+
+            //Copy element of the list into array starting given position
+            /*Int32[] testArray = new Int32[] { 23, 23, 12, 12 };
+            OutPutArrgs(testArray);
+
+            CircularList<Int32> listForCopy = new CircularList<Int32>(new int[] { 1, 2, 3 });
+            OutPutList(listForCopy);
+
+            listForCopy.CopyTo(testArray, 1);
+            //listForCopy.CopyTo(testArray, 2);
+            OutPutArrgs(testArray);*/
+        }
+        static void DoubleExample()
+        {
+            var listD = new CircularList<double>() { 1.12, 2.22, 3.32, 4.42, 5.52 };
+            OutPutList<Double>(listD);
+            listD.emptyListEvent += OutputMessageAddItem;
+
+
+            //Method Add that add one item to the list
+            /*listD.Add(3.23);
             listD.Add(21.1212);
             listD.Add(12.21);
             listD.Add(14.2332);
@@ -135,34 +110,65 @@ namespace _1_lb
             listD.Add(3.233);
             listD.Add(11.2323);
             listD.Add(12.2323);
-            listD.Add(13.1212545);
+            listD.Add(13.1212545);*/
 
-            OutPutListD(listD);
+            //Method AddAt that add one item to position to the list
+            //listD.AddAt(21.2121);
 
-            Console.WriteLine(listD.ElementAt(0));
+            //Method AddRange that add range of items to the list
+            /*double[] addingListDouble = { 2.323221, 2.1212, 312.23, 4.42, 5.121 };
+            listD.AddRangeLast(addingListDouble);
+            OutPutList(listD);*/
 
-            Console.WriteLine(listD.GetFirst());
+            //Remove element on position from the list
+            /*listD.RemoveAt(0);
+            OutPutList(listD);*/
 
-            Console.WriteLine(listD.GetLast());
+            //Remove first occurrence of element from the list
+            /*listD.Remove(17.424);
+            OutPutList(listD);*/
 
-            listD.RemoveAt(0);
-            OutPutListD(listD);
+            //Remove last element from the list
+            /*listD.RemoveFirst();
+            OutPutList(listD);*/
 
-            listD.Remove(17.424);
-            OutPutListD(listD);
+            //Remove first element from the list
+            /*listD.RemoveLast();
+            OutPutList(listD);*/
 
-            listD.RemoveFirst();
-            OutPutListD(listD);
+            //Clear list
+            /*listD.Clear();
+            OutPutList(listD);*/
 
-            listD.RemoveLast();
-            OutPutListD(listD);
+            //Methods contains. Return true if list has an item and returns false if list hasn`t item
+            /*Console.WriteLine(listD.Contains(4.42));
+            Console.WriteLine(listD.Contains(1223.21));*/
 
-            listD.Clear();
-            OutPutListD(listD);*/
+            //Output element on given position from the list
+            //Console.WriteLine(listD.ElementAt(0));
 
-            Console.ReadKey();
+            //Output first element from the list
+            //Console.WriteLine(listD.GetFirst());
+
+            //Output last element from the list
+            //Console.WriteLine(listD.GetLast());
+
+            //Reverse list
+            /*listD.Reverse();
+            OutPutList(listD);*/
+
+            //Copy element of the list into array starting given position
+            /*Double[] testArrayD = new Double[] { 23.32, 23.23, 12.21, 12.33 };
+            OutPutArrgs(testArrayD);
+
+            CircularList<Double> listForCopy = new CircularList<Double>(new Double[] { 1.1, 2.22, 3.333 });
+            OutPutList(listForCopy);
+
+            listForCopy.CopyTo(testArrayD, 1);
+            //listForCopy.CopyTo(testArrayD, 2);
+            OutPutArrgs(testArrayD);*/
         }
-        static void OutPutArrgs(int[] arrgs)
+        static void OutPutArrgs<T>(T[] arrgs)
         {
             foreach (var elem in arrgs)
             {
@@ -170,47 +176,17 @@ namespace _1_lb
             }
             Console.WriteLine();
         }
-        static void OutPutList(CircularList<int> list)
+        static void OutPutList<T>(CircularList<T> list)
         {
-            int counter = 0;
             foreach (var x in list)
             {
-                if (counter < list.Count)
-                {
-                    Console.Write(x.ToString() + " ");
-                    counter++;
-                }
-                else
-                {
-                    break;
-                }
+                Console.Write(x.ToString() + " ");
             }
             Console.WriteLine();
         }
-        static void OutPutListD(CircularList<double> list)
+        static void OutputMessageAddItem(object e, EventArgs args)
         {
-            int counter = 0;
-            foreach (var x in list)
-            {
-                if (counter < list.Count)
-                {
-                    Console.Write(x.ToString() + " ");
-                    counter++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            Console.WriteLine();
-        }
-        static void OutputMessageAddInt32Item(object e, CircleEventArgs args)
-        {
-            Console.WriteLine($"List with type of {e.GetType()} is empty. Length of list: {args.Count}");
-        }
-        static void OutputMessageAddDoubleItem(object e, CircleEventArgs args)
-        {
-            Console.WriteLine($"List with type of {e.GetType()} is empty. Length of list: {args.Count}");
+            Console.WriteLine($"List with type of {e.GetType()} is empty. Length of list: {((CircleEventArgs)args).Count}");
         }
     }
 }

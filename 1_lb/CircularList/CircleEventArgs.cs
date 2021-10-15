@@ -10,12 +10,23 @@ namespace CircularList
     /// Class CircleEventArgs.
     /// This class is follower of EventArgs and contains recived information.
     /// </summary>
-    public class CircleEventArgs: System.EventArgs
+    public class CircleEventArgs: EventArgs
     {
         /// <summary>
         /// Private field of recived information
         /// </summary>
         private readonly Int32 count;
+
+        /// <summary>
+        /// This is property of count
+        /// </summary>
+        public Int32 Count
+        {
+            get
+            {
+                return count;
+            }
+        }
 
         /// <summary>
         /// This is  constructure with parameter for class "CircleEventArgs"
@@ -25,17 +36,5 @@ namespace CircularList
         {
             this.count = count;
         }
-
-        /// <summary>
-        /// This is property of count
-        /// </summary>
-        public Int32 Count
-        { 
-            get 
-            { 
-                return count; 
-            }
-        }
-
     }
 }

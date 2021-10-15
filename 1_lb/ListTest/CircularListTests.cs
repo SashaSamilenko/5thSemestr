@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace ListTest
+namespace TestProject
 {
-    public class Tests
+    public class CircularListTests
     {
         [Test]
         public void CircularList_ConstructorWithoutParametrs()
@@ -38,8 +38,22 @@ namespace ListTest
         [Test]
         public void CircularList_SetNullItem_GetArgumentNullException()
         {
-            //assert
-            Assert.Throws < ArgumentNullException>(()=> new CircularList<int>(null));
+            //arange
+            CircularList<Int32> list;
+            //act
+            try
+            {
+                list = new CircularList<Int32>(null);
+            }
+            catch (ArgumentNullException)
+            {
+                //assert
+                Assert.Throws<ArgumentNullException>(
+                () => { throw new ArgumentNullException(); }
+                );
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
 
         [Test]
@@ -61,7 +75,22 @@ namespace ListTest
         [TestCase(null)]
         public void CircularList_SetALotOfItems_GetArgumentNullException(int[] elements)
         {
-            Assert.Throws<ArgumentNullException>(() => new CircularList<int>(elements));
+            //arrange
+            CircularList<Int32> list;
+            //act
+            try
+            {
+                list = new CircularList<Int32>(elements);
+            }
+            catch (ArgumentNullException)
+            {
+                //assert
+                Assert.Throws<ArgumentNullException>(
+                () => { throw new ArgumentNullException(); }
+                );
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
 
         [Test]
@@ -81,12 +110,24 @@ namespace ListTest
         [TestCase(3, new int[] { 1 }, -5)]
         [TestCase(-1, new int[] { 0, 1, 1, 22, 434, 1, 23, 4, 12, 13 }, -5)]
         [TestCase(31, new int[] { 0, 1, 1, 22, 434, 1, 23, 4, 12, 13 }, -5)]
-        public void ElementAt_GetElementFromListForIndex_GetIndexOutOfRangeException(int position, int[] elements, int expectedResult)
+        public void ElementAt_GetElementFromListForIndex_GetIndexOutOfRangeException(int index, int[] elements, int expectedResult)
         {
             //arange
-            var list = new CircularList<int>(elements);
-            //assert
-            Assert.Throws<IndexOutOfRangeException>(()=>list.ElementAt(position));
+            CircularList<int> list = new CircularList<int>(elements);
+            //act
+            try
+            {
+                list.ElementAt(index);
+            }
+            catch(IndexOutOfRangeException)
+            {
+                //assert
+                Assert.Throws<IndexOutOfRangeException>(
+                () => { throw new IndexOutOfRangeException(); }
+                );
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
 
         [Test]
@@ -159,8 +200,18 @@ namespace ListTest
             //arange
             var list = new CircularList<int>(elements);
             int expectedCount = list.Count + 1;
-            //assert
-            Assert.Throws<IndexOutOfRangeException>(() => list.AddAt(addItem, index)); 
+            //act
+            try
+            {
+                list.AddAt(addItem, index);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                //assert
+                Assert.Throws<IndexOutOfRangeException>(() => { throw new IndexOutOfRangeException(); });
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
 
         [Test]
@@ -171,8 +222,18 @@ namespace ListTest
             //arange
             var list = new CircularList<string>(elements);
             int expectedCount = list.Count + 1;
-            //assert
-            Assert.Throws<NullReferenceException>(() => list.AddAt(addItem, index));
+            //act
+            try
+            {
+                list.AddAt(addItem, index);
+            }
+            catch (NullReferenceException)
+            {
+                //assert
+                Assert.Throws<NullReferenceException>(() => { throw new NullReferenceException(); });
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
         
         [Test]
@@ -197,8 +258,18 @@ namespace ListTest
         {
             //arange
             var list = new CircularList<int>(stateElements);
-            //assert
-            Assert.Throws<ArgumentNullException>(() => list.AddRange(addElements));
+            //act
+            try
+            {
+                list.AddRange(addElements);
+            }
+            catch
+            {
+                //assert
+                Assert.Throws<ArgumentNullException>(() => { throw new ArgumentNullException(); });
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
 
         [Test]
@@ -226,8 +297,18 @@ namespace ListTest
         {
             //averrage
             var list = new CircularList<int>(elements);
-            //assert
-            Assert.Throws<IndexOutOfRangeException>(() => list.RemoveAt(index));
+            //act
+            try
+            {
+                list.RemoveAt(index);
+            }
+            catch
+            {
+                //assert
+                Assert.Throws<IndexOutOfRangeException>(() => { throw new IndexOutOfRangeException(); });
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
 
         [Test]
@@ -249,7 +330,7 @@ namespace ListTest
         [Test]
         [TestCase(5, new int[] { 1, 2, 3, 4 })]
         [TestCase(5, new int[] { -22 })]
-        public void Remove_RemoveFirstElementOfTheListWithUnrealData_PreviouslyListReturn(int data, int[] elements)
+        public void Remove_RemoveUnreallElementOfTheListWithUnrealData_PreviouslyListReturn(int data, int[] elements)
         {
             //averrage
             var list = new CircularList<int>(elements);
@@ -345,33 +426,63 @@ namespace ListTest
         {
             //arrange
             CircularList<int> list = new CircularList<int>(elements);
-            //assert
-            Assert.Throws<NullReferenceException>(() => list.CopyTo(arrgs, index));
+            //act
+            try
+            {
+                list.CopyTo(arrgs, index);
+            }
+            catch
+            {
+                //assert
+                Assert.Throws<NullReferenceException>(() => { throw new NullReferenceException(); });
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
 
         [Test]
-
         [TestCase(new int[] { 123, 23, 2, 12, 2, 3, 2, 1, 2, 3 }, new int[] { -2, -3, -1, -4, -5 }, -2)]
-        [TestCase(new int[] { 14,2133,3233,1212 }, new int[] { 21 }, -12)]
+        [TestCase(new int[] { 14, 2133, 3233, 1212 }, new int[] { 21 }, -12)]
         public void CopyTo_CopyListToArrgsStartingIndexPosition_GetArgumentOutOfRangeException(int[] arrgs, int[] elements, int index)
         {
             //arrange
             CircularList<int> list = new CircularList<int>(elements);
-            //assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => list.CopyTo(arrgs, index));
-        }
+            //act
+            try
+            {
+                list.CopyTo(arrgs, index);
+            }
+            catch
+            {
+                //assert
+                Assert.Throws<ArgumentOutOfRangeException>(() => { throw new ArgumentOutOfRangeException(); });
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
 
+        }
+        
         [Test]
         [TestCase(new int[] { 123, 23, 2, 12, 2, 3, 2, 1, 2, 3 }, new int[] { -2, -3, -1, -4, -5 }, 7)]
-        [TestCase(new int[] { 123, 23, 2, 12, 2, 3}, new int[] { 27, -3, -1, -4, -5 }, 12)]
-        [TestCase(new int[] { 123, 23, 2, 12, 2, 3 }, new int[] { 11,23,13, 27 }, 3)]
+        [TestCase(new int[] { 123, 23, 2, 12, 2, 3 }, new int[] { 27, -3, -1, -4, -5 }, 12)]
+        [TestCase(new int[] { 123, 23, 2, 12, 2, 3 }, new int[] { 11, 23, 13, 27 }, 3)]
         [TestCase(new int[] { 123, 23, 2, 12, 2, 3 }, new int[] { 11, 23, 13, 27 }, 4)]
         public void CopyTo_CopyListToArrgsStartingIndexPosition_GetArgumentException(int[] arrgs, int[] elements, int index)
         {
             //arrange
             CircularList<int> list = new CircularList<int>(elements);
-            //assert
-            Assert.Throws<ArgumentException>(() => list.CopyTo(arrgs, index));
+            //act
+            try
+            {
+                list.CopyTo(arrgs, index);
+            }
+            catch
+            {
+                //assert
+                Assert.Throws<ArgumentException>(() => { throw new ArgumentException(); });
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
 
         [Test]
@@ -381,7 +492,7 @@ namespace ListTest
         {
             //arrange
             CircularList<int> list = new CircularList<int>(elements);
-            //acts
+            //act
             list.CopyTo((Array)arrgs, index);
             //assert
             for (int i = index; i < arrgs.Length - index - 1; i++)
@@ -397,20 +508,39 @@ namespace ListTest
         {
             //arrange
             CircularList<int> list = new CircularList<int>(elements);
-            //assert
-            Assert.Throws<NullReferenceException>(() => list.CopyTo((Array)arrgs, index));
+            //act
+            try
+            {
+                list.CopyTo((Array)arrgs, index);
+            }
+            catch
+            {
+                //assert
+                Assert.Throws<NullReferenceException>(() => { throw new NullReferenceException(); });
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
 
         [Test]
-
         [TestCase(new int[] { 123, 23, 2, 12, 2, 3, 2, 1, 2, 3 }, new int[] { -2, -3, -1, -4, -5 }, -2)]
         [TestCase(new int[] { 14, 2133, 3233, 1212 }, new int[] { 21 }, -12)]
         public void CopyTo_CopyListToArrayStartingIndexPosition_GetArgumentOutOfRangeException(int[] arrgs, int[] elements, int index)
         {
             //arrange
             CircularList<int> list = new CircularList<int>(elements);
-            //assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => list.CopyTo((Array)arrgs, index));
+            //act
+            try
+            {
+                list.CopyTo((Array)arrgs, index);
+            }
+            catch
+            {
+                //assert
+                Assert.Throws<ArgumentOutOfRangeException>(() => { throw new ArgumentOutOfRangeException(); });
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
 
         [Test]
@@ -422,8 +552,18 @@ namespace ListTest
         {
             //arrange
             CircularList<int> list = new CircularList<int>(elements);
-            //assert
-            Assert.Throws<ArgumentException>(() => list.CopyTo((Array)arrgs, index));
+            //act
+            try
+            {
+                list.CopyTo((Array)arrgs, index);
+            }
+            catch
+            {
+                //assert
+                Assert.Throws<ArgumentException>(() => { throw new ArgumentException(); });
+                return;
+            }
+            Assert.Fail("No exception was thrown.");
         }
 
         [Test]
@@ -436,12 +576,12 @@ namespace ListTest
             //arrange
             int[] copyArgs = args;
             CircularList<int> list = new CircularList<int>(args);
-            //acts
+            //act
             list.Reverse();
             //assert
             for (int i = 0; i < args.Length; i++)
             {
-                Assert.AreEqual(args[i], list.ElementAt(list.Count-1-i), message: "Reverse does not work correctly!");
+                Assert.AreEqual(args[i], list[list.Count-1-i], message: "Reverse does not work correctly!");
             }
         }
 

@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1_lb", "1_lb\1_lb.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircularList", "CircularList\CircularList.csproj", "{11DC066D-379C-4A2F-8E26-BA5F8ADED32F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ListTest", "ListTest\ListTest.csproj", "{EE876F81-8D01-4BF1-A44E-F48239F4AE8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject", "ListTest\TestProject.csproj", "{EE876F81-8D01-4BF1-A44E-F48239F4AE8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

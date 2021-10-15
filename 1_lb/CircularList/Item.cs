@@ -30,11 +30,6 @@ namespace CircularList
         public Item<T> Next { get; set; }
 
         /// <summary>
-        /// This is constructure without the parametrs
-        /// </summary>
-        public Item(){}
-
-        /// <summary>
         /// This is constructure
         /// </summary>
         /// <param name="data"></param>

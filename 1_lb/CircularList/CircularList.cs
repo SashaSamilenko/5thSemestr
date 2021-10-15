@@ -12,7 +12,7 @@ namespace CircularList
     ///  This class is CircularLinkedList!
     ///  Present CircularLinkedList!
     /// </summary>
-    public class CircularList<T> : IEnumerable, ICollection, IEnumerable<T>, ICollection<T>//ICollection<T>, IEnumerable<T>, IEnumerable, ICollection, IList<T>, IList
+    public class CircularList<T> : IEnumerable, ICollection, IEnumerable<T>, ICollection<T>
     {
         /// <summary>
         /// EventHandler - generation delegate.
@@ -25,11 +25,6 @@ namespace CircularList
         /// This is reference to the first element of the list
         /// </summary>
         private Item<T> head = null;
-
-        /// <summary>
-        /// This is reference to the last element of the list
-        /// </summary>
-        private Item<T> next = null;//Loss
 
         /// <summary>
         /// This is reference to the previous element of the list
@@ -46,7 +41,35 @@ namespace CircularList
         /// </summary>
         public int Count
         {
-            get => count;
+            get { return count; }
+        }
+
+        /// <summary>
+        /// Gets or sets the element at the specified index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public T this[int index]
+        {
+            get
+            {
+                if (index >= count || index < 0)
+                {
+                    throw new IndexOutOfRangeException("Index out of range.");
+                }
+                var current = head;
+                Item<T> previous = null;
+                for (int i = 0; i < count; i++)
+                {
+                    if (i == index)
+                    {
+                        break;
+                    }
+                    previous = current;
+                    current = current.Next;
+                }
+                return current.CurrentData;
+            }
         }
 
         /// <summary>
@@ -116,15 +139,22 @@ namespace CircularList
                 }
                 else
                 {
-                    tail.Next = item;
-                    tempItem = tail;
-                    tail = item;
-                    tail.Previous = tempItem;
-                    tail.Next = head;
-                    head.Previous = tail;
-                    if(i == 1)
+                    if (count == 1)
                     {
-                        head.Next = item;
+                        tail = item;
+                        tail.Previous = head;
+                        tail.Next = head;
+                        head.Next = tail;
+                        head.Previous = tail; 
+                    }
+                    else
+                    {
+                        tail.Next = item;
+                        tempItem = tail;
+                        tail = tail.Next;
+                        tail.Previous = tempItem;
+                        tail.Next = head;
+                        head.Previous = tail;
                     }
                 }
                 count += 1;
@@ -209,9 +239,10 @@ namespace CircularList
                     Item<T> tItem = null;
                     tail.Next = item;
                     tItem = tail;
-                    tail = item;
+                    tail = tail.Next;
                     tail.Next = head;
                     tail.Previous = tItem;
+                    head.Previous = tail;
                 }
                 //tail.Next = item;
             }
@@ -231,7 +262,7 @@ namespace CircularList
             Item<T> tempItem = null;
             for (int i = 0; i < elements.Count(); i++)
             {
-                var item = new Item<T>(elements.ElementAt(i));
+                Item<T> item = new Item<T>(elements.ElementAt(i));
                 if (head == null)
                 {
                     head = item;
@@ -243,15 +274,22 @@ namespace CircularList
                 }
                 else
                 {
-                    tail.Next = item;
-                    tempItem = tail;
-                    tail = item;
-                    tail.Previous = tempItem;
-                    tail.Next = head;
-                    head.Previous = tail;
-                    if (i == 1)
+                    if (count == 1)
                     {
-                        head.Next = item;
+                        tail = item;
+                        tail.Previous = head;
+                        tail.Next = head;
+                        head.Next = tail;
+                        head.Previous = tail;
+                    }
+                    else
+                    {
+                        tail.Next = item;
+                        tempItem = tail;
+                        tail = tail.Next;
+                        tail.Previous = tempItem;
+                        tail.Next = head;
+                        head.Previous = tail;
                     }
                 }
                 count += 1;
@@ -481,7 +519,7 @@ namespace CircularList
         public void Clear()
         {
             head = null;
-            next = null;
+            tail = null;
             count = 0;
             CircleEventArgs args = new CircleEventArgs(count);
             EmptyListEventMethod(args);
