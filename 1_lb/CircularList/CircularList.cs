@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 
 namespace CircularList
 {
@@ -12,7 +11,7 @@ namespace CircularList
     ///  This class is CircularLinkedList!
     ///  Present CircularLinkedList!
     /// </summary>
-    public class CircularList<T> : IEnumerable, ICollection, IEnumerable<T>, ICollection<T>
+    public class CircularList<T> : ICollection, IEnumerable<T>, ICollection<T>
     {
         /// <summary>
         /// EventHandler - generation delegate.
@@ -72,28 +71,26 @@ namespace CircularList
             }
         }
 
+
         /// <summary>
         /// Gets a value indicating whether the collection is read-only
         /// </summary>
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly { get; set; }
 
         /// <summary>
         /// Gets an object that can be used to synchronize access to the ICollection.
         /// </summary>
-        public object SyncRoot => throw new NotImplementedException();
+        object System.Collections.ICollection.SyncRoot { get { return new object(); } }
 
         /// <summary>
         /// Gets a value indicating whether access to the Array is synchronized (thread safe).
         /// </summary>
-        public bool IsSynchronized => throw new NotImplementedException();
+        public bool IsSynchronized { get { return true; } }
 
         /// <summary>
         /// This is default costructure of class "CircularList"
         /// </summary>
-        public CircularList() { }
+        public CircularList() { IsReadOnly = false; }
 
         /// <summary>
         /// This is costructure of class "CircularList" with one parameter
@@ -104,7 +101,7 @@ namespace CircularList
             {
                 throw new ArgumentNullException(nameof(data));
             }
-            var item = new Item<T>(data);
+            Item<T> item = new Item<T>(data);
             head = item;
             head.Next = head;
             head.Previous = head;
@@ -112,6 +109,7 @@ namespace CircularList
             tail.Next = head;
             tail.Previous = head;
             count += 1;
+            IsReadOnly = false;
         }
 
         /// <summary>
@@ -127,7 +125,7 @@ namespace CircularList
             Item<T> tempItem = null;
             for (int i = 0; i < elements.Count(); i++)
             {
-                var item = new Item<T>(elements.ElementAt(i));
+                Item<T> item = new Item<T>(elements.ElementAt(i));
                 if (head == null)
                 {
                     head = item;
@@ -159,6 +157,7 @@ namespace CircularList
                 }
                 count += 1;
             }
+            IsReadOnly = false;
         }
 
         /// <summary>
@@ -178,12 +177,12 @@ namespace CircularList
             {
                 if (i == index)
                 {
-                    return current.CurrentData;
+                    break;
                 }
                 previous = current;
                 current = current.Next;
             }
-            return default(T);
+            return current.CurrentData;
         }
 
         /// <summary>
@@ -210,6 +209,10 @@ namespace CircularList
         /// <param name="data">This is data, which will be adding to the list</param>
         public void Add(T data)
         {
+            if (IsReadOnly)
+            {
+                throw new ReadOnlyException("Cannot add element to readOnly list.");
+            }
             if (data == null)
             {
                 throw new ArgumentNullException(nameof(data));
@@ -244,7 +247,6 @@ namespace CircularList
                     tail.Previous = tItem;
                     head.Previous = tail;
                 }
-                //tail.Next = item;
             }
             count += 1;
         }
@@ -255,6 +257,10 @@ namespace CircularList
         /// <param name="elements">This is collections of data, which will be adding to the list</param>
         public void AddRange(IEnumerable<T> elements)
         {
+            if (IsReadOnly)
+            {
+                throw new ReadOnlyException("Cannot add elements to readOnly list.");
+            }
             if (elements == null)
             {
                 throw new ArgumentNullException(nameof(elements));
@@ -303,6 +309,10 @@ namespace CircularList
         /// <param name="position"></param>
         public void AddAt(T data, int position)
         {
+            if (IsReadOnly)
+            {
+                throw new ReadOnlyException("Cannot add element to readOnly list.");
+            }
             if (position >= count || position < 0)
             {
                 throw new IndexOutOfRangeException("Position out of range!");
@@ -323,37 +333,17 @@ namespace CircularList
             }
             if(i == 0)
             {
-                if (head == null)
-                {
-                    head = item;
-                    tail = head;
-                }
-                else 
-                {
-                    
-                    tail.Next = item;
-                    head = item;
-                    head.Previous = tail;
-                    head.Next = current;
-                    current.Previous = head;
-                }
+                item.Next = head.Next;
+                item.Previous = head.Previous;
+                head = item;
+                tail.Next = item;
             }
             else
             {
-                if(i==count-1)
-                {
-                    current.Next = item;
-                    tail = item;
-                    tail.Previous = current;
-                    tail.Next = head;
-                }
-                else
-                {
-                    previous.Next = item;
-                    item.Previous = previous;
-                    item.Next = current;
-                    current.Previous = item;
-                }
+                item.Previous = previous;
+                item.Next = current;
+                previous.Next = item;
+                current.Previous = item;
             }
             count++;
         }
@@ -364,6 +354,15 @@ namespace CircularList
         /// <param name="data">This is data of deleted element</param>
         public bool Remove(T data)
         {
+            if(IsReadOnly)
+            {
+                throw new ReadOnlyException("Cannot remove element from readOnly list.");
+            }
+            if (count == 0)
+            {
+                CircleEventArgs arr = new CircleEventArgs(count);
+                EmptyListEventMethod(arr);
+            }
             bool removing = false;
             if(data == null)
             {
@@ -423,7 +422,17 @@ namespace CircularList
         /// </summary>
         public void RemoveFirst()
         {
-            if(count == 1)
+            if (IsReadOnly)
+            {
+                throw new ReadOnlyException("Cannot remove element from readOnly list.");
+            }
+            if (count == 0)
+            {
+                CircleEventArgs arr = new CircleEventArgs(count);
+                EmptyListEventMethod(arr);
+                return;
+            }
+            if (count == 1)
             {
                 head = null;
                 tail = null;
@@ -444,10 +453,15 @@ namespace CircularList
         /// </summary>
         public void RemoveLast()
         {
-            if(count == 0)
+            if (IsReadOnly)
+            {
+                throw new ReadOnlyException("Cannot remove element from readOnly list.");
+            }
+            if (count == 0)
             {
                 CircleEventArgs arr = new CircleEventArgs(count);
                 EmptyListEventMethod(arr);
+                return;
             }
             else
             {
@@ -472,8 +486,12 @@ namespace CircularList
         /// This method remove element on index position
         /// </summary>
         /// <param name="index">This is position of deleted element</param>
-        public void RemoveAt(int index)
+        public void RemoveAt(Int32 index)
         {
+            if (IsReadOnly)
+            {
+                throw new ReadOnlyException("Cannot remove element from readOnly list.");
+            }
             if (index < 0 || index >= count)
             {
                 throw new IndexOutOfRangeException("Index out of range!");
@@ -518,6 +536,10 @@ namespace CircularList
         /// </summary>
         public void Clear()
         {
+            if (IsReadOnly)
+            {
+                throw new ReadOnlyException("Cannot clear list, because this class only for read.");
+            }
             head = null;
             tail = null;
             count = 0;
@@ -574,7 +596,7 @@ namespace CircularList
             if (array == null)
                 throw new NullReferenceException(nameof(array));
             if (arrayIndex < 0)
-                throw new ArgumentOutOfRangeException("The starting array index cannot be less then zero.");
+                throw new IndexOutOfRangeException("The starting array index cannot be less then zero.");
             if (Count >= array.Length - arrayIndex + 1)
                 throw new ArgumentException("The destination array has fewer elements than the collection or index more then allowable value.");
             var jumper = head;
@@ -590,7 +612,11 @@ namespace CircularList
         /// </summary>
         public void Reverse()
         {
-            if(count == 0)
+            if (IsReadOnly)
+            {
+                throw new ReadOnlyException("Cannot reverse list, beacause this class only for read.");
+            }
+            if (count == 0)
             {
                 return;
             }
@@ -643,7 +669,7 @@ namespace CircularList
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable)this).GetEnumerator();
+            return (IEnumerator)((this).GetEnumerator());
         }
     }
 }

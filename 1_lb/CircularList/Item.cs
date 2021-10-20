@@ -41,13 +41,5 @@ namespace CircularList
             }
             CurrentData = data;
         }
-        /// <summary>
-        /// This method override usually method "ToString()"
-        /// </summary>
-        /// <returns>Current data in string format</returns>
-        public override string ToString()
-        {
-            return CurrentData.ToString();
-        }
     }
 }

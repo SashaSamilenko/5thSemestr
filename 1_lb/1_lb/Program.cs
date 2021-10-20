@@ -11,6 +11,11 @@ namespace _1_lb
     {
         static void Main(string[] args)
         {
+            CircularList<Int32> list = new CircularList<Int32>(new int[] { 11, 22, 33, 44, 144 });
+            OutPutList<Int32>(list);
+            list.AddAt(3, 4);
+            OutPutList<Int32>(list);
+
             //Int32Example();
 
             //DoubleExample();
@@ -19,15 +24,15 @@ namespace _1_lb
         }
         static void Int32Example()
         {
-            var list = new CircularList<int>() { 1, 2, 3, 4, 5 };//(new int[] { 1, 2, 3, 4, 5 });
+            var list = new CircularList<int>(new int[] { 1, 2, 3, 4, 5 });
             list.emptyListEvent += OutputMessageAddItem;
             OutPutList(list);
 
             //Add values to the end of CircularList
-            /*int[] addingList = new int[] { 5, 4, 3, 2, 1, 22, 33, 44, 55, 66, 77, 88, 99, 101 };
+            int[] addingList = new int[] { 5, 4, 3, 2, 1, 22, 33, 44, 55, 66, 77, 88, 99, 101 };
             OutPutArrgs(addingList);
-            List.AddRange(addingList);
-            OutPutList(list);*/
+            list.AddRange(addingList);
+            OutPutList(list);
 
             //Add-method
             /*list.Add(3);
@@ -44,20 +49,20 @@ namespace _1_lb
             OutPutList(list);*/
 
             //Remove element from position
-            /*list.RemoveAt(0);
-            OutPutList(list);*/
+            //list.RemoveAt(0);
+            //OutPutList(list);
 
             //Remove element with data
-            /*list.Remove(5);
-            OutPutList(list);*/
+            //list.Remove(5);
+            //OutPutList(list);
 
             //Remove first element
-            /*list.RemoveFirst();
-            OutPutList(list);*/
+            //list.RemoveFirst();
+            //OutPutList(list);
 
             //Remove last element
-            /*list.RemoveLast();
-            OutPutList(list);*/
+            //list.RemoveLast();
+            //OutPutList(list);
 
             //Clear circular linker list
             /*list.Clear();
@@ -77,8 +82,8 @@ namespace _1_lb
             //Console.WriteLine(list.GetLast());
 
             //Method Reverse()
-            /*list.Reverse();
-            OutPutList(list);*/
+            list.Reverse();
+            OutPutList(list);
 
             //Copy element of the list into array starting given position
             /*Int32[] testArray = new Int32[] { 23, 23, 12, 12 };
