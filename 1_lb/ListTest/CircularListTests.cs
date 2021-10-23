@@ -711,6 +711,62 @@ namespace TestProject
         }
 
         [Test]
+        public void EmptyListEventMethod_RemoveElementFromTheList_CatchEventCall()
+        {
+            //arange
+            CircularList<Int32> list = new CircularList<int>(12);
+            FakeObjectForFollowingEvent moke = new FakeObjectForFollowingEvent();
+            list.emptyListEvent += moke.FakeFollowingMethod;
+            //act
+            list.Remove(12);
+            //assert
+            moke.CircularList.Should().NotBeNull();
+            moke.eventArgs.Should().NotBeNull();
+        }
+
+        [Test]
+        public void EmptyListEventMethod_RemoveFirstElementFromTheList_CatchEventCall()
+        {
+            //arange
+            CircularList<Int32> list = new CircularList<int>(12);
+            FakeObjectForFollowingEvent moke = new FakeObjectForFollowingEvent();
+            list.emptyListEvent += moke.FakeFollowingMethod;
+            //act
+            list.RemoveFirst();
+            //assert
+            moke.CircularList.Should().NotBeNull();
+            moke.eventArgs.Should().NotBeNull();
+        }
+
+        [Test]
+        public void EmptyListEventMethod_RemoveLastElementFromTheList_CatchEventCall()
+        {
+            //arange
+            CircularList<Int32> list = new CircularList<int>(12);
+            FakeObjectForFollowingEvent moke = new FakeObjectForFollowingEvent();
+            list.emptyListEvent += moke.FakeFollowingMethod;
+            //act
+            list.RemoveLast();
+            //assert
+            moke.CircularList.Should().NotBeNull();
+            moke.eventArgs.Should().NotBeNull();
+        }
+
+        [Test]
+        public void EmptyListEventMethod_RemoveAtPositionElementFromTheList_CatchEventCall()
+        {
+            //arange
+            CircularList<Int32> list = new CircularList<int>(12);
+            FakeObjectForFollowingEvent moke = new FakeObjectForFollowingEvent();
+            list.emptyListEvent += moke.FakeFollowingMethod;
+            //act
+            list.RemoveAt(0);
+            //assert
+            moke.CircularList.Should().NotBeNull();
+            moke.eventArgs.Should().NotBeNull();
+        }
+
+        [Test]
         [TestCase(new Int32[] { }, 0)]
         [TestCase(new Int32[] { 1,2,3,4,5}, -1)]
         [TestCase(new Int32[] { 1, 2, 3, 4, 5 }, 8)]
