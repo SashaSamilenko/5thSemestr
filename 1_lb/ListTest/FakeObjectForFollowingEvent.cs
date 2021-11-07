@@ -9,17 +9,17 @@ namespace TestProject
 {
     internal class FakeObjectForFollowingEvent
     {
-        public CircularList<Int32> CircularList { get; private set; }
-        public CircleEventArgs eventArgs { get; private set; }
-        public FakeObjectForFollowingEvent()
+        internal Object CircularList { get; private set; }
+        internal CircleEventArgs EventArgs { get; private set; }
+        internal FakeObjectForFollowingEvent()
         {
             CircularList = null;
-            eventArgs = null;
+            EventArgs = null;
         }
-        public void FakeFollowingMethod(Object CircularList, CircleEventArgs eventArgs)
+        internal void FakeFollowingMethod(Object circularList, CircleEventArgs eventArgs)
         {
-            this.CircularList = (CircularList<Int32>)CircularList;
-            this.eventArgs = eventArgs;
+            CircularList = circularList;
+            EventArgs = eventArgs;
         }
     }
 }

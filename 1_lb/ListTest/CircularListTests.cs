@@ -6,11 +6,18 @@ using System.Collections;
 using FluentAssertions;
 using System.Data;
 using System.Linq;
+using NUnit.Framework.Constraints;
 
 namespace TestProject
 {
     public class CircularListTests
     {
+        private MockForEvent<Int32> mock;
+        private EventArgs mess;
+        internal void VerifyMethod(object sender, CircleEventArgs e)
+        {
+            mess = e;
+        }
         [Test]
         public void CircularList_ConstructorWithoutParametrs()
         {
@@ -699,60 +706,68 @@ namespace TestProject
         [Test]
         public void EmptyListEventMethod_ClearEmptyList_CatchEventCall()
         {
-            //arange
-            CircularList<Int32> list = new CircularList<int>();
-            FakeObjectForFollowingEvent moke = new FakeObjectForFollowingEvent();
-            list.emptyListEvent += moke.FakeFollowingMethod;
+            //arrange
+            mock = new MockForEvent<int>();
+            mock.Object.emptyListEvent += VerifyMethod;
             //act
-            list.Clear();
+            mock.Object.Clear();
             //assert
-            moke.CircularList.Should().NotBeNull();
-            moke.eventArgs.Should().NotBeNull();
+            mess.Should().NotBeNull();
+            mess.GetType().Should().Be(typeof(CircleEventArgs));
         }
 
         [Test]
         public void EmptyListEventMethod_RemoveElementFromTheList_CatchEventCall()
         {
-            //arange
-            CircularList<Int32> list = new CircularList<int>(12);
-            FakeObjectForFollowingEvent moke = new FakeObjectForFollowingEvent();
-            list.emptyListEvent += moke.FakeFollowingMethod;
+            //arrange
+            mock = new MockForEvent<int>(5);
+            mock.Object.emptyListEvent += VerifyMethod;
             //act
-            list.Remove(12);
+            mock.Object.Remove(5);
             //assert
-            moke.CircularList.Should().NotBeNull();
-            moke.eventArgs.Should().NotBeNull();
+            mess.Should().NotBeNull();
+            mess.GetType().Should().Be(typeof(CircleEventArgs));
         }
 
         [Test]
         public void EmptyListEventMethod_RemoveFirstElementFromTheList_CatchEventCall()
         {
-            //arange
-            CircularList<Int32> list = new CircularList<int>(12);
-            FakeObjectForFollowingEvent moke = new FakeObjectForFollowingEvent();
-            list.emptyListEvent += moke.FakeFollowingMethod;
+            //arrange
+            mock = new MockForEvent<int>(5);
+            mock.Object.emptyListEvent += VerifyMethod;
             //act
-            list.RemoveFirst();
+            mock.Object.RemoveFirst();
             //assert
-            moke.CircularList.Should().NotBeNull();
-            moke.eventArgs.Should().NotBeNull();
+            mess.Should().NotBeNull();
+            mess.GetType().Should().Be(typeof(CircleEventArgs));
         }
 
         [Test]
         public void EmptyListEventMethod_RemoveLastElementFromTheList_CatchEventCall()
         {
-            //arange
-            CircularList<Int32> list = new CircularList<int>(12);
-            FakeObjectForFollowingEvent moke = new FakeObjectForFollowingEvent();
-            list.emptyListEvent += moke.FakeFollowingMethod;
+            //arrange
+            mock = new MockForEvent<int>(5);
+            mock.Object.emptyListEvent += VerifyMethod;
             //act
-            list.RemoveLast();
+            mock.Object.RemoveLast();
             //assert
-            moke.CircularList.Should().NotBeNull();
-            moke.eventArgs.Should().NotBeNull();
+            mess.Should().NotBeNull();
+            mess.GetType().Should().Be(typeof(CircleEventArgs));
         }
 
         [Test]
+        public void EmptyListEventMethod_RemoveAtPositionElementFromTheList_CatchEventCall()
+        {
+            //arrange
+            mock = new MockForEvent<int>(5);
+            mock.Object.emptyListEvent += VerifyMethod;
+            //act
+            mock.Object.RemoveAt(0);
+            //assert
+            mess.Should().NotBeNull();
+            mess.GetType().Should().Be(typeof(CircleEventArgs));
+        }
+        /*[Test]
         public void EmptyListEventMethod_RemoveAtPositionElementFromTheList_CatchEventCall()
         {
             //arange
@@ -763,8 +778,8 @@ namespace TestProject
             list.RemoveAt(0);
             //assert
             moke.CircularList.Should().NotBeNull();
-            moke.eventArgs.Should().NotBeNull();
-        }
+            moke.EventArgs.Should().NotBeNull();
+        }*/
 
         [Test]
         [TestCase(new Int32[] { }, 0)]
