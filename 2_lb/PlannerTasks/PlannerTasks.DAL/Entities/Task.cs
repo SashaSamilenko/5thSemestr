@@ -23,7 +23,8 @@ namespace PlannerTasks.DAL.Entities
     {
         public Int32 TaskId { get; set; }
         public String Description { get; set; }
-        public DateTime TimeExecution { get; set; }
+        public TimeSpan TimeExecution { get; set; }
+        public DateTime StartTime { get; set; }
         public Status Status { get; set; }
         public Priority Priority { get; set; }
         public Int32 EmployeeId { get; set; }

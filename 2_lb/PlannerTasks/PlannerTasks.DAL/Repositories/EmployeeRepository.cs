@@ -12,9 +12,9 @@ namespace PlannerTasks.DAL.Repositories
 {
     public class EmployeeRepository: IRepository<Employee>
     {
-        private MobileContext db;
+        private TasksContext db;
 
-        public EmployeeRepository(MobileContext context)
+        public EmployeeRepository(TasksContext context)
         {
             this.db = context;
         }

@@ -51,10 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EF\MobileContext.cs" />
-    <Compile Include="EF\StoreDbInitializer.cs" />
+    <Compile Include="EF\TasksContext.cs" />
+    <Compile Include="EF\PlannerDbInitializer.cs" />
     <Compile Include="Entities\Employee.cs" />
     <Compile Include="Entities\Task.cs" />
+    <Compile Include="EntityConfigurations\EmployeeConfiguration.cs" />
+    <Compile Include="EntityConfigurations\TaskConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
