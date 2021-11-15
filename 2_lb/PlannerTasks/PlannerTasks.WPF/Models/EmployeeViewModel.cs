@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PlannerTasks.DAL.Entities;
 
-namespace PlannerTasks.BLL.DTO
+namespace PlannerTasks.WPF.Models
 {
-    public class EmployeeDTO
+    public class EmployeeViewModel
     {
         public Int32 EmployeeId { get; set; }
         public String FirstName { get; set; }

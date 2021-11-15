@@ -9,7 +9,7 @@ namespace PlannerTasks.BLL.Interfaces
 {
     public interface ITaskService
     {
-        void MakeTask(TaskDTO taskDto);
+        void MakeTask(TaskDTO taskDto, Int32 priorityValue);
         EmployeeDTO GetEmployee(int? id);
         IEnumerable<EmployeeDTO> GetEmployees();
         void Dispose();

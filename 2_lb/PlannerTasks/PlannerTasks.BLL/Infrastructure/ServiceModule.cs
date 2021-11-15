@@ -9,7 +9,7 @@ using PlannerTasks.DAL.Repositories;
 
 namespace PlannerTasks.BLL.Infrastructure
 {
-    class ServiceModule : NinjectModule
+    public class ServiceModule : NinjectModule
     {
         private string connectionString;
         public ServiceModule(string connection)

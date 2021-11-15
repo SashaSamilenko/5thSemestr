@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using PlannerTasks.BLL.DTO;
 using PlannerTasks.DAL.Entities;
-//using PlannerTasks.BLL.BusinessModels;
 using PlannerTasks.DAL.Interfaces;
 using PlannerTasks.BLL.Infrastructure;
 using PlannerTasks.BLL.Interfaces;
@@ -20,7 +17,7 @@ namespace PlannerTasks.BLL.Services
         {
             Database = uow;
         }
-        public void MakeTask(TaskDTO taskDto)
+        public void MakeTask(TaskDTO taskDto, Int32 priorityValue)
         {
             Employee employee = Database.Employees.Get(taskDto.EmployeeId);
 
@@ -28,19 +25,27 @@ namespace PlannerTasks.BLL.Services
                 throw new ValidationException("Employee did not find!", "");
 
             //decimal sum = new Discount(0.1m).GetDiscountedPrice(phone.Price);
+            Priority taskPriority;
+            switch (priorityValue)
+            {
+                case 1: taskPriority = Priority.Low;
+                    break;
+                case 2: taskPriority = Priority.Medium;
+                    break;
+                case 3: taskPriority = Priority.High;
+                    break; 
+                default: taskPriority = Priority.Low;
+                    break;
+            }
 
             Task order = new Task
             {
                 Description = taskDto.Description,
                 TimeExecution = taskDto.TimeExecution,
-                Status = taskDto.Status,
-                Priority = taskDto.Priority,
+                StartTime = taskDto.StartTime,
+                Status = Status.NotStarted,
+                CurrentPriority = taskPriority,
                 EmployeeId = employee.EmployeeId
-                /*Date = DateTime.Now,
-                Address = orderDto.Address,
-                PhoneId = phone.Id,
-                Sum = sum,
-                PhoneNumber = orderDto.PhoneNumber*/
             };
             Database.Tasks.Create(order);
             Database.Save();
@@ -67,11 +72,10 @@ namespace PlannerTasks.BLL.Services
                         FirstName = employee.FirstName, 
                         SecondName = employee.SecondName, 
                         HomePhone = employee.HomePhone, 
-                        BirthDate = employee.BirthDate,
-                        TitleOfCourtesy = employee.TitleOfCourtesy,
-                        BusyRate = employee.BusyRate
-
-                };
+                        BirthDate = employee.BirthDate//,
+                        //TitleOfCourtesy = employee.TitleOfCourtesy,
+                        //BusyRate = employee.BusyRate
+                    };
         }
 
         public void Dispose()

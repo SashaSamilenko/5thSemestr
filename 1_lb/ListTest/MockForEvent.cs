@@ -9,16 +9,19 @@ namespace TestProject
 {
     internal class MockForEvent<T>
     {
-        internal CircularList<T> Object;
-
-        internal MockForEvent()
+        public CircularList<T> Object;
+        public CircleEventArgs mess;
+        public MockForEvent()
         {
             Object = new CircularList<T>();
         }
-
-        internal MockForEvent(T data)
+        public MockForEvent(T data)
         {
             Object = new CircularList<T>(data);
+        }
+        public void VerifyMethod(object sender, EventArgs e)
+        {
+            mess = (CircleEventArgs)e;
         }
     }
 }

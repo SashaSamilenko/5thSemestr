@@ -12,12 +12,8 @@ namespace TestProject
 {
     public class CircularListTests
     {
-        private MockForEvent<Int32> mock;
-        private EventArgs mess;
-        internal void VerifyMethod(object sender, CircleEventArgs e)
-        {
-            mess = e;
-        }
+        internal MockForEvent<Int32> mock;
+
         [Test]
         public void CircularList_ConstructorWithoutParametrs()
         {
@@ -708,12 +704,12 @@ namespace TestProject
         {
             //arrange
             mock = new MockForEvent<int>();
-            mock.Object.emptyListEvent += VerifyMethod;
+            mock.Object.emptyListEvent += mock.VerifyMethod;
             //act
             mock.Object.Clear();
             //assert
-            mess.Should().NotBeNull();
-            mess.GetType().Should().Be(typeof(CircleEventArgs));
+            mock.mess.Should().NotBeNull();
+            mock.mess.GetType().Should().Be(typeof(CircleEventArgs));
         }
 
         [Test]
@@ -721,12 +717,12 @@ namespace TestProject
         {
             //arrange
             mock = new MockForEvent<int>(5);
-            mock.Object.emptyListEvent += VerifyMethod;
+            mock.Object.emptyListEvent += mock.VerifyMethod;
             //act
             mock.Object.Remove(5);
             //assert
-            mess.Should().NotBeNull();
-            mess.GetType().Should().Be(typeof(CircleEventArgs));
+            mock.mess.Should().NotBeNull();
+            mock.mess.GetType().Should().Be(typeof(CircleEventArgs));
         }
 
         [Test]
@@ -734,12 +730,12 @@ namespace TestProject
         {
             //arrange
             mock = new MockForEvent<int>(5);
-            mock.Object.emptyListEvent += VerifyMethod;
+            mock.Object.emptyListEvent += mock.VerifyMethod;
             //act
             mock.Object.RemoveFirst();
             //assert
-            mess.Should().NotBeNull();
-            mess.GetType().Should().Be(typeof(CircleEventArgs));
+            mock.mess.Should().NotBeNull();
+            mock.mess.GetType().Should().Be(typeof(CircleEventArgs));
         }
 
         [Test]
@@ -747,12 +743,12 @@ namespace TestProject
         {
             //arrange
             mock = new MockForEvent<int>(5);
-            mock.Object.emptyListEvent += VerifyMethod;
+            mock.Object.emptyListEvent += mock.VerifyMethod;
             //act
             mock.Object.RemoveLast();
             //assert
-            mess.Should().NotBeNull();
-            mess.GetType().Should().Be(typeof(CircleEventArgs));
+            mock.mess.Should().NotBeNull();
+            mock.mess.GetType().Should().Be(typeof(CircleEventArgs));
         }
 
         [Test]
@@ -760,12 +756,12 @@ namespace TestProject
         {
             //arrange
             mock = new MockForEvent<int>(5);
-            mock.Object.emptyListEvent += VerifyMethod;
+            mock.Object.emptyListEvent += mock.VerifyMethod;
             //act
             mock.Object.RemoveAt(0);
             //assert
-            mess.Should().NotBeNull();
-            mess.GetType().Should().Be(typeof(CircleEventArgs));
+            mock.mess.Should().NotBeNull();
+            mock.mess.GetType().Should().Be(typeof(CircleEventArgs));
         }
         /*[Test]
         public void EmptyListEventMethod_RemoveAtPositionElementFromTheList_CatchEventCall()

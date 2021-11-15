@@ -13,11 +13,12 @@ namespace PlannerTasks.DAL.Repositories
         private TasksContext db;
         private EmployeeRepository employeeRepository;
         private TaskRepository taskRepository;
+        private StatusHistoryRepository statusHistoryRepository;
 
-        /*public EFUnitOfWork()
+        public EFUnitOfWork()
         {
             db = new TasksContext();
-        }*/
+        }
 
         public EFUnitOfWork(string connectionString)
         {
@@ -40,6 +41,16 @@ namespace PlannerTasks.DAL.Repositories
                 if(taskRepository == null)
                     taskRepository = new TaskRepository(db);
                 return taskRepository;
+            }
+        }
+
+        public IRepository<StatusHistory> StatusRepositories
+        {
+            get
+            {
+                if (statusHistoryRepository == null)
+                    statusHistoryRepository = new StatusHistoryRepository(db);
+                return statusHistoryRepository;
             }
         }
 

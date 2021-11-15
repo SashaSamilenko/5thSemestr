@@ -54,6 +54,7 @@
     <Compile Include="EF\TasksContext.cs" />
     <Compile Include="EF\PlannerDbInitializer.cs" />
     <Compile Include="Entities\Employee.cs" />
+    <Compile Include="Entities\StatusHistory.cs" />
     <Compile Include="Entities\Task.cs" />
     <Compile Include="EntityConfigurations\EmployeeConfiguration.cs" />
     <Compile Include="EntityConfigurations\TaskConfiguration.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Repositories\EFUnitOfWork.cs" />
     <Compile Include="Repositories\EmployeeRepository.cs" />
+    <Compile Include="Repositories\StatusHistoryRepository.cs" />
     <Compile Include="Repositories\TaskRepository.cs" />
   </ItemGroup>
   <ItemGroup>
