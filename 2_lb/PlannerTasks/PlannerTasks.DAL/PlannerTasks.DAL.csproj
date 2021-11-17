@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EF\TasksContext.cs" />
+    <Compile Include="EF\PlannerContext.cs" />
     <Compile Include="EF\PlannerDbInitializer.cs" />
     <Compile Include="Entities\Employee.cs" />
     <Compile Include="Entities\StatusHistory.cs" />

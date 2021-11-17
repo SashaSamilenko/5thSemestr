@@ -11,9 +11,9 @@ namespace PlannerTasks.DAL.Repositories
 {
     public class TaskRepository: IRepository<Task>
     {
-        private TasksContext db;
+        private PlannerContext db;
 
-        public TaskRepository(TasksContext context)
+        public TaskRepository(PlannerContext context)
         {
             this.db = context;
         }

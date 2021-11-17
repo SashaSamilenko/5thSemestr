@@ -11,10 +11,12 @@ namespace PlannerTasks.DAL.Entities
     /// </summary>
     public enum Status
     {
-        NotStarted,
-        OnExecution,
-        OnTesting,
-        Done
+        NotStarted=0,
+        OnExecution=1,
+        OnTesting=2,
+        Expired=-1,
+        DoneBeforeExpired=3,
+        DoneAfterExpired=-2
     }
 
     /// <summary>
@@ -33,14 +35,49 @@ namespace PlannerTasks.DAL.Entities
     /// </summary>
     public class Task
     {
+        /// <summary>
+        /// Identifier of task
+        /// </summary>
         public Int32 TaskId { get; set; }
+
+        /// <summary>
+        /// Description of task
+        /// </summary>
         public String Description { get; set; }
+
+        /// <summary>
+        /// Time execution of task
+        /// </summary>
         public TimeSpan TimeExecution { get; set; }
+
+        /// <summary>
+        /// Time of starting execute of task
+        /// </summary>
         public DateTime? StartTime { get; set; }
+
+        /// <summary>
+        /// Status of task
+        /// </summary>
         public Status Status { get; set; }
+
+        /// <summary>
+        /// Priority of task
+        /// </summary>
         public Priority CurrentPriority { get; set; }
+
+        /// <summary>
+        /// Identifier of employee
+        /// </summary>
         public Int32 EmployeeId { get; set; }
+
+        /// <summary>
+        /// That property implements relation many-to-one for Employee
+        /// </summary>
         public Employee Employee { get; set; }
+
+        /// <summary>
+        /// That property implements relation one-to-many for HistoryStatus
+        /// </summary>
         public virtual List<StatusHistory> HistoryStatus { get; set; }
     }
 }

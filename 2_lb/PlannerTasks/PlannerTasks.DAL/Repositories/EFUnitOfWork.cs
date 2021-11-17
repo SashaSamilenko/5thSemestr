@@ -10,19 +10,19 @@ namespace PlannerTasks.DAL.Repositories
 {
     public class EFUnitOfWork: IUnitOfWork
     {
-        private TasksContext db;
+        private PlannerContext db;
         private EmployeeRepository employeeRepository;
         private TaskRepository taskRepository;
         private StatusHistoryRepository statusHistoryRepository;
 
         public EFUnitOfWork()
         {
-            db = new TasksContext();
+            db = new PlannerContext();
         }
 
         public EFUnitOfWork(string connectionString)
         {
-            db = new TasksContext(connectionString);
+            db = new PlannerContext(connectionString);
         }
         public IRepository<Employee> Employees
         {

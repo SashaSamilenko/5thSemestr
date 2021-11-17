@@ -2,14 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//using System.Threading.Tasks;
 using PlannerTasks.DAL.Entities;
 using System.Data.Entity.ModelConfiguration;
 
 namespace PlannerTasks.DAL.EntityConfigurations
 {
+    /// <summary>
+    /// Class TaskConfiguration
+    /// Is configure properties of task
+    /// </summary>
     internal class TaskConfiguration : EntityTypeConfiguration<Task>
     {
+        /// <summary>
+        /// Constructor without parameters
+        /// That configures properties of task
+        /// and relations between Task and HistoryStates,
+        /// and between Task and Employee
+        /// </summary>
         public TaskConfiguration()
         {
             this.HasRequired(t => t.Employee)

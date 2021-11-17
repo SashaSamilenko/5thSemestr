@@ -48,7 +48,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\EmployeeDTO.cs" />
+    <Compile Include="DTO\StatusHistoryDTO.cs" />
     <Compile Include="DTO\TaskDTO.cs" />
+    <Compile Include="Infrastructure\GivenFirstNameHasTooManyCharactersException.cs" />
+    <Compile Include="Infrastructure\GivenPhoneNumberHasTooManyCharactersException.cs" />
+    <Compile Include="Infrastructure\GivenSecondNameHasTooManyCharactersException.cs" />
+    <Compile Include="Infrastructure\NotExistAddedStatusOfTaskException.cs" />
+    <Compile Include="Infrastructure\NotExistEmployeeWithIdException.cs" />
+    <Compile Include="Infrastructure\NotExistTaskWithIdException.cs" />
     <Compile Include="Infrastructure\ServiceModule.cs" />
     <Compile Include="Infrastructure\ValidationException.cs" />
     <Compile Include="Interfaces\ITaskService.cs" />

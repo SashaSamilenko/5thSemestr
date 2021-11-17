@@ -71,7 +71,7 @@ namespace PlannerTasks.BLL.Services
                         EmployeeId = employee.EmployeeId,
                         FirstName = employee.FirstName, 
                         SecondName = employee.SecondName, 
-                        HomePhone = employee.HomePhone, 
+                        HomePhone = employee.PhoneNumber, 
                         BirthDate = employee.BirthDate//,
                         //TitleOfCourtesy = employee.TitleOfCourtesy,
                         //BusyRate = employee.BusyRate

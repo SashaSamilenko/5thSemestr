@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//using System.Threading.Tasks;
 using PlannerTasks.DAL.Interfaces;
 using PlannerTasks.DAL.EF;
 using PlannerTasks.DAL.Entities;
@@ -12,9 +11,9 @@ namespace PlannerTasks.DAL.Repositories
 {
     public class StatusHistoryRepository: IRepository<StatusHistory>
     {
-        private TasksContext db;
+        private PlannerContext db;
 
-        public StatusHistoryRepository(TasksContext context)
+        public StatusHistoryRepository(PlannerContext context)
         {
             this.db = context;
         }
