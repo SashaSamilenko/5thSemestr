@@ -26,6 +26,10 @@ namespace PlannerTasks.DAL.EntityConfigurations
             this.Property(e => e.PhoneNumber).HasMaxLength(24);
             this.HasMany(e => e.Tasks)
                 .WithRequired(t => t.Employee);
+            this.Property(e => e.PhoneNumber).IsRequired();
+            this.Property(e => e.BirthDate).IsOptional();
+            this.Property(e => e.FirstName).IsRequired();
+            this.Property(e => e.SecondName).IsRequired();
         }
     }
 }

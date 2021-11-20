@@ -8,22 +8,54 @@ using PlannerTasks.DAL.EF;
 
 namespace PlannerTasks.DAL.Repositories
 {
+    /// <summary>
+    /// Class EFUnitOfWork
+    /// Implements interface IUnitOfWork
+    /// </summary>
     public class EFUnitOfWork: IUnitOfWork
     {
+        /// <summary>
+        /// Context DB
+        /// </summary>
         private PlannerContext db;
+
+        /// <summary>
+        /// Employee repository
+        /// </summary>
         private EmployeeRepository employeeRepository;
+
+        /// <summary>
+        /// Task repository
+        /// </summary>
         private TaskRepository taskRepository;
+
+        /// <summary>
+        /// StatusHistory repository
+        /// </summary>
         private StatusHistoryRepository statusHistoryRepository;
 
+        /// <summary>
+        /// Constructor without parametrs
+        /// </summary>
         public EFUnitOfWork()
         {
             db = new PlannerContext();
         }
 
+
+        /// <summary>
+        /// Constructor with one parameter
+        /// </summary>
+        /// <param name="connectionString">Is a connection string to DB</param>
         public EFUnitOfWork(string connectionString)
         {
             db = new PlannerContext(connectionString);
         }
+
+        /// <summary>
+        /// Implementation of repository interface
+        /// for employees
+        /// </summary>
         public IRepository<Employee> Employees
         {
             get
@@ -34,6 +66,10 @@ namespace PlannerTasks.DAL.Repositories
             }
         }
 
+        /// <summary>
+        /// Implementation of repository interface
+        /// for tasks
+        /// </summary>
         public IRepository<Task> Tasks
         {
             get
@@ -44,7 +80,11 @@ namespace PlannerTasks.DAL.Repositories
             }
         }
 
-        public IRepository<StatusHistory> StatusRepositories
+        /// <summary>
+        /// Implementation of repository interface
+        /// for statusHistories
+        /// </summary>
+        public IRepository<StatusHistory> StatusHistories
         {
             get
             {
@@ -54,13 +94,26 @@ namespace PlannerTasks.DAL.Repositories
             }
         }
 
+        /// <summary>
+        /// Implementation method Save.
+        /// Call method SaveChanges in DB context to  save changes of context.
+        /// </summary>
         public void Save()
         {
             db.SaveChanges();
         }
 
+        /// <summary>
+        /// Bool value about disposing DBContext
+        /// and connection with DB, if that exist
+        /// </summary>
         private bool disposed = false;
 
+        /// <summary>
+        /// Method for disposing DB context
+        /// and connection with DB, if that exist
+        /// </summary>
+        /// <param name="disposing"></param>
         public virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
@@ -73,6 +126,11 @@ namespace PlannerTasks.DAL.Repositories
             }
         }
 
+        /// <summary>
+        /// Method for call disposing context
+        /// and connection with DB.
+        /// And also deleting objects from finalize list.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);

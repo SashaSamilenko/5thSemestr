@@ -7,9 +7,11 @@ using PlannerTasks.BLL.Infrastructure;
 using PlannerTasks.BLL.Services;
 using PlannerTasks.BLL.DTO;
 using PlannerTasks.Console.Util;
+
 using PlannerTasks.DAL.Repositories;
 using PlannerTasks.DAL.EF;
 using PlannerTasks.DAL.Entities;
+
 using Ninject;
 using Ninject.Modules;
 using System.Data.Entity;
@@ -23,7 +25,9 @@ namespace PlannerTasks.Console
     {
         static void Main(string[] args)
         {
+            //Specify path to dataDirectory
             string path = ConfigurationSettings.AppSettings["DataDirectory"];
+            //Configurating data_directory path
             AppDomain.CurrentDomain.SetData("DataDirectory", path);
 
             /*var modules = new INinjectModule[] { new TaskModule(), new ServiceModule("PlannerDB2") };
@@ -34,65 +38,59 @@ namespace PlannerTasks.Console
             NinjectModule serviceModule = new ServiceModule("PlannerDB2");
             var kernel = new StandardKernel(taskModule, serviceModule);
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));*/
-            
-            //TaskService taskService = new TaskService(new EFUnitOfWork("PlannerDB2"));
-            /*
-            taskService.MakeTask(new TaskDTO
-                {
-                    Description = "Check issues",
-                    Priority = Priority.Medium,
-                    Status = Status.NotStarted,
-                    TimeExecution = new TimeSpan(0, 2, 0, 0),
-                    StartTime = DateTime.Now,
-                    EmployeeId = 3
-                }, 1);
-            
-                var employees = taskService.GetEmployees();
-                foreach (EmployeeDTO e in employees)
-                {
-                    System.Console.WriteLine("Employee:");
-                    System.Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5}, {6}", e.EmployeeId, e.FirstName, e.SecondName, e.BirthDate, e.HomePhone, e.BusyRate, e.TitleOfCourtesy);
 
-                    foreach (Task t in e.Tasks)
-                    {
-                        System.Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5}, {6}", t.TaskId, t.EmployeeId, t.Description, t.Priority, t.Status, t.TimeExecution, t.StartTime);
-                    }
-                }
-                System.Console.ReadKey();
-            }*/
-            //efUnitOfWork.Employees.Update(new Employee { FirstName = "Oleg", SecondName = "Samilenko", TitleOfCourtesy = TitleOfCourtesy.Dr, BirthDate = new DateTime(1992, 7, 23), HomePhone = "(066) 577-7778", BusyRate = BusyRate.MediumBusy});
-            //efUnitOfWork.Save();
-            using (PlannerContext db = new PlannerContext("TestConnection"))//"PlannerDB"))
+            using (EFUnitOfWork iEfUnitOfWork = new EFUnitOfWork("PlannerDB"))//"PlannerDB"))
             {
-                /*var taskRepository = new TaskRepository(db);
-                taskRepository.Create(new Task
+                iEfUnitOfWork.Tasks.
+                Create(new Task
                 {
-                    Description = "asdasd",
+                    Description = "Hello, World!",
                     CurrentPriority = Priority.High,
                     Status = Status.NotStarted,
                     TimeExecution = new TimeSpan(0, 3, 0, 0),
                     StartTime = DateTime.Now,
-                    EmployeeId = 1
-                });*/
-                //EmployeeRepository employeeRepository = new EmployeeRepository(db);
-                //employeeRepository.Get(1).Tasks.Add(taskRepository.Get(1));
-                //employeeRepository.Update(new Employee { EmployeeId = 1, FirstName = "Oleg", SecondName = "Samilenko", TitleOfCourtesy = TitleOfCourtesy.Dr, BirthDate = new DateTime(1992, 7, 23), HomePhone = "(066) 577-7778", BusyRate = BusyRate.MediumBusy });
-                //db.SaveChanges();
+                    EmployeeId = 2,
+                });
+                iEfUnitOfWork.Save();
 
-                /*var employees = db.Employees;
-                foreach (Employee e in employees)
+                iEfUnitOfWork.StatusHistories.Create(new StatusHistory()
+                {
+                    DateAppearOfStatus = DateTime.Now,
+                    Status = Status.NotStarted,
+                    TaskId = iEfUnitOfWork.Tasks.GetAll().OrderBy(t=>t.TaskId).Last().TaskId
+                });
+
+                iEfUnitOfWork.Save();
+
+                foreach (Employee e in iEfUnitOfWork.Employees.GetAll())
                 {
                     System.Console.WriteLine("Employee:");
                     System.Console.WriteLine("{0}, {1}, {2}, {3}, {4}", e.EmployeeId, e.FirstName, e.SecondName, e.BirthDate, e.PhoneNumber);
 
                     foreach (Task t in e.Tasks)
                     {
-                        System.Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5}, {6}", t.TaskId, t.EmployeeId, t.Description, t.CurrentPriority, t.Status, t.TimeExecution, t.StartTime);
+                        System.Console.WriteLine("Task:");
+                        System.Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5}, {6}", t.TaskId, t.EmployeeId,
+                            t.Description, t.CurrentPriority, t.Status, t.TimeExecution, t.StartTime);
+                        System.Console.WriteLine("StatusHistories:");
+                        foreach (StatusHistory hs in t.HistoryStatus)
+                        {
+                            System.Console.WriteLine("{0}, {1}, {2}, {3}", hs.StatusHistoryId, hs.Status,
+                                hs.DateAppearOfStatus, hs.TaskId);
+                        }
                     }
-                }*/
-                //System.Console.ReadKey();
+                }
+                System.Console.ReadKey();
             }
 
+        /*            using (PlannerContext db = new PlannerContext("PlannerDB"))
+                    {
+                        db.SaveChanges();
+                        System.Console.ReadKey();
+                    }*/
+/*        SqlException: The INSERT statement conflicted with the FOREIGN KEY constraint 
+        "FK_dbo.StatusHistories_dbo.Tasks_TaskId".The conflict occurred 
+            in database "TestConnection", table "dbo.Tasks", column 'TaskId'.*/
         }
     }
 }

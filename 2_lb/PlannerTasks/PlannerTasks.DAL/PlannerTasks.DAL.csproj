@@ -57,6 +57,7 @@
     <Compile Include="Entities\StatusHistory.cs" />
     <Compile Include="Entities\Task.cs" />
     <Compile Include="EntityConfigurations\EmployeeConfiguration.cs" />
+    <Compile Include="EntityConfigurations\StatusHistoryConfigurations.cs" />
     <Compile Include="EntityConfigurations\TaskConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IRepository.cs" />

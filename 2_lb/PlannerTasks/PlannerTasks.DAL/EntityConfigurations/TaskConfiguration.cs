@@ -16,7 +16,7 @@ namespace PlannerTasks.DAL.EntityConfigurations
         /// <summary>
         /// Constructor without parameters
         /// That configures properties of task
-        /// and relations between Task and HistoryStates,
+        /// and relations between Task and HistoryStatuses,
         /// and between Task and Employee
         /// </summary>
         public TaskConfiguration()
@@ -29,6 +29,11 @@ namespace PlannerTasks.DAL.EntityConfigurations
             this.Property(p => p.StartTime)
                 .HasColumnType("datetime2")
                 .HasPrecision(0);
+            this.Property(t => t.TimeExecution)
+                .IsOptional()
+                .HasPrecision(0);
+            this.Property(t => t.CurrentPriority)
+                .IsOptional();
         }
     }
 }

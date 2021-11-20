@@ -12,6 +12,5 @@ namespace PlannerTasks.BLL.DTO
         public Int32 StatusHistoryId { get; set; }
         public Status Status { get; set; }
         public Int32 TaskId { get; set; }
-        public Task Task { get; set; }
     }
 }

@@ -62,6 +62,7 @@ namespace PlannerTasks.DAL.EF
         {
             modelBuilder.Configurations.Add(new EmployeeConfiguration());
             modelBuilder.Configurations.Add(new TaskConfiguration());
+            modelBuilder.Configurations.Add(new StatusHistoryConfigurations());
             base.OnModelCreating(modelBuilder);
         }
     }
