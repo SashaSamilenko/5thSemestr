@@ -15,8 +15,7 @@ namespace PlannerTasks.DAL.Entities
         OnExecution=1,
         OnTesting=2,
         Expired=-1,
-        DoneBeforeExpired=3,
-        DoneAfterExpired=-2
+        Done=3
     }
 
     /// <summary>

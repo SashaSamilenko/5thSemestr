@@ -11,47 +11,38 @@ using PlannerTasks.Console.Models;
 using Ninject;
 using Ninject.Modules;
 using AutoMapper;
-using PlannerTasks.DAL.Entities;
 
 namespace PlannerTasks.Console.Controllers
 {
     public class MainController
     {
-        /*ITaskService orderService;
+        ITaskService taskService;
         public MainController(ITaskService serv)
         {
-            orderService = serv;
+            taskService = serv;
         }
-        public TaskViewModel MakeTask(int? id)
+        public void MakeTask(TaskViewModel task)
         {
             try
             {
-                Mapper.CreateMap<EmployeeDTO, TaskViewModel>()
-                    .ForMember("PhoneId", opt => opt.MapFrom(src => src.Id));
-                var order = Mapper.Map<EmployeeDTO, TaskViewModel>(orderService.GetEmployee(id));
-                return order;
+                MapperConfiguration config = new MapperConfiguration(cfg => {
+                    cfg.CreateMap<TaskViewModel, TaskDTO>();
+                });
+
+                IMapper mapper = config.CreateMapper();
+                TaskViewModel source = new TaskViewModel();
+                TaskDTO taskDto = mapper.Map<TaskViewModel, TaskDTO>(source);
+
+                taskService.MakeTask(taskDto);
             }
-            catch (ValidationException ex)
-            {
-                throw ex;
-            }
-        }
-        public void MakeOrder(TaskViewModel order, priorityValue)
-        {
-            try
-            {
-                Mapper.CreateMap<TaskViewModel, TaskDTO>();
-                var taskDto = Mapper.Map<TaskViewModel, TaskDTO>(order);
-                orderService.MakeTask(taskDto);
-            }
-            catch (ValidationException ex)
+            catch (NotExistEmployeeWithIdException ex)
             {
                 throw ex;
             }
         }
         protected void Dispose(bool disposing)
         {
-            orderService.Dispose();
-        }*/
+            taskService.Dispose();
+        }
     }
 }

@@ -38,6 +38,7 @@ namespace PlannerTasks.BLL.Services
         /// <param name="priorityValue"></param>
         public void MakeTask(TaskDTO taskDto)
         {
+            Console.WriteLine("Checking: {0}, {1}",Database.Employees.GetAll().Count(),taskDto.EmployeeId);
             Employee employee = Database.Employees.Get(taskDto.EmployeeId);
 
             if (employee == null)
@@ -72,11 +73,9 @@ namespace PlannerTasks.BLL.Services
             return mapper.Map<IEnumerable<Employee>, List<EmployeeDTO>>(Database.Employees.GetAll());
         }
 
-        public EmployeeDTO GetEmployee(int? id)// System.Nullable<Int32>
+        public EmployeeDTO GetEmployee(int id)// int? == System.Nullable<Int32>
         {
-            if (id == null)
-                throw new ValidationException("Have not given id of employee.");
-            Employee employee = Database.Employees.Get(id.Value);
+            Employee employee = Database.Employees.Get(id);
             if (employee == null)
                 throw new NotExistEmployeeWithIdException("Employee did not find with given id.");
 
@@ -90,16 +89,38 @@ namespace PlannerTasks.BLL.Services
                         BirthDate = employee.BirthDate
                     };
         }
+        public IEnumerable<TaskDTO> GetAllTaskForGivenEmployee(int id)
+        {
+            Employee task = Database.Employees.Get(id);
+            if (task == null)
+            {
+                throw new NotExistEmployeeWithIdException("Employee with given id is not existing.");
+            }
 
-        public IEnumerable<StatusHistory> GetAllStatusHistoryForGivenTask(int id)
+            MapperConfiguration config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<Task, TaskDTO>();
+            });
+
+            IMapper mapper = config.CreateMapper();
+            IEnumerable<Task> source = Database.Tasks.Find(t => t.EmployeeId == id);
+            return mapper.Map<IEnumerable<Task>, IEnumerable<TaskDTO>>(source);
+        }
+
+        public IEnumerable<StatusHistoryDTO> GetAllStatusHistoryForGivenTask(int id)
         {
             Task task = Database.Tasks.Get(id);
             if (task == null)
             {
-                throw new NotExistTaskWithIdException("Task with given taskId is not existing.");
+                throw new NotExistTaskWithIdException("Task with given id is not existing.");
             }
 
-            return Database.StatusHistories.Find(sh => sh.TaskId == id);
+            MapperConfiguration config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<StatusHistory, StatusHistoryDTO>();
+            });
+
+            IMapper mapper = config.CreateMapper();
+            IEnumerable<StatusHistory> source = Database.StatusHistories.Find(sh => sh.TaskId == id);
+            return  mapper.Map<IEnumerable<StatusHistory>, IEnumerable<StatusHistoryDTO>>(source);
         }
 
         public void SetOnExecutionStatus(int id)
@@ -165,7 +186,7 @@ namespace PlannerTasks.BLL.Services
             Database.Save();
         }
 
-        public void SetDoneBeforeExpiredStatus(int id)
+        public void SetDoneStatus(int id)
         {
             Task task = Database.Tasks.Get(id);
             if (task == null)
@@ -173,34 +194,13 @@ namespace PlannerTasks.BLL.Services
                 throw new NotExistTaskWithIdException("Task with given id is not existing.");
             }
 
-            task.Status = Status.DoneBeforeExpired;
+            task.Status = Status.Done;
             Database.Tasks.Update(task);
 
             Database.StatusHistories.Create(new StatusHistory()
             {
                 DateAppearOfStatus = DateTime.Now,
-                Status = Status.DoneBeforeExpired,
-                TaskId = id
-            });
-
-            Database.Save();
-        }
-
-        public void SetDoneAfterExpiredStatus(int id)
-        {
-            Task task = Database.Tasks.Get(id);
-            if (task == null)
-            {
-                throw new NotExistTaskWithIdException("Task with given id is not existing.");
-            }
-
-            task.Status = Status.DoneAfterExpired;
-            Database.Tasks.Update(task);
-
-            Database.StatusHistories.Create(new StatusHistory()
-            {
-                DateAppearOfStatus = DateTime.Now,
-                Status = Status.DoneAfterExpired,
+                Status = Status.Done,
                 TaskId = id
             });
 

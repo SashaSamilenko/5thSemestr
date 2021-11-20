@@ -42,7 +42,6 @@ namespace PlannerTasks.DAL.Repositories
             db = new PlannerContext();
         }
 
-
         /// <summary>
         /// Constructor with one parameter
         /// </summary>

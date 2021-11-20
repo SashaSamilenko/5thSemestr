@@ -51,6 +51,7 @@
     <Compile Include="DTO\StatusHistoryDTO.cs" />
     <Compile Include="DTO\TaskDTO.cs" />
     <Compile Include="Infrastructure\GivenFirstNameHasTooManyCharactersException.cs" />
+    <Compile Include="Infrastructure\GivenIdentifierException.cs" />
     <Compile Include="Infrastructure\GivenPhoneNumberHasTooManyCharactersException.cs" />
     <Compile Include="Infrastructure\GivenSecondNameHasTooManyCharactersException.cs" />
     <Compile Include="Infrastructure\NotExistAddedStatusOfTaskException.cs" />

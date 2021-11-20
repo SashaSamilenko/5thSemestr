@@ -14,6 +14,7 @@ namespace PlannerTasks.BLL.DTO
         public TimeSpan TimeExecution { get; set; }
         public Status Status { get; set; }
         public Priority CurrentPriority { get; set; }
+        public DateTime StartTime { get; set; }
         public Int32 EmployeeId { get; set; }
     }
 }

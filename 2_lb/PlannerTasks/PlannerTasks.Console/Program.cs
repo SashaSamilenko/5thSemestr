@@ -15,8 +15,9 @@ using PlannerTasks.DAL.Entities;
 using Ninject;
 using Ninject.Modules;
 using System.Data.Entity;
-
-
+using PlannerTasks.BLL.Interfaces;
+using PlannerTasks.Console.Controllers;
+using PlannerTasks.Console.Models;
 
 
 namespace PlannerTasks.Console
@@ -39,7 +40,7 @@ namespace PlannerTasks.Console
             var kernel = new StandardKernel(taskModule, serviceModule);
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));*/
 
-            using (EFUnitOfWork iEfUnitOfWork = new EFUnitOfWork("PlannerDB"))//"PlannerDB"))
+            /*using (EFUnitOfWork iEfUnitOfWork = new EFUnitOfWork("PlannerDB"))//"PlannerDB"))
             {
                 iEfUnitOfWork.Tasks.
                 Create(new Task
@@ -81,16 +82,44 @@ namespace PlannerTasks.Console
                     }
                 }
                 System.Console.ReadKey();
-            }
+            }*/
 
-        /*            using (PlannerContext db = new PlannerContext("PlannerDB"))
+            //IKernel ninjectKernel = new StandardKernel();
+            //ninjectKernel.Bind<I>().To<BookRepository>();
+            var modules = new INinjectModule[] { new ServiceModule("TestInjection") };
+            var kernel = new StandardKernel(modules);
+            kernel.Bind<ITaskService>().To<TaskService>();
+            ITaskService taskService = kernel.Get<ITaskService>();
+
+            MainController controller = new MainController(taskService);
+            controller.MakeTask(new TaskViewModel()
+            {
+                EmployeeId = 2,
+                Priority = 1,
+                Status = 0,
+                Description = "My First Injection test",
+                TimeExecution = new TimeSpan(0,2,0,0)
+            });
+
+            foreach (EmployeeDTO e in taskService.GetEmployees().ToList())
+            {
+                System.Console.WriteLine("Employee:");
+                System.Console.WriteLine("{0}, {1}, {2}, {3}, {4}", e.EmployeeId, e.FirstName, e.SecondName, e.BirthDate, e.PhoneNumber);
+
+                foreach (TaskDTO t in taskService.GetAllTaskForGivenEmployee(e.EmployeeId))
+                {
+                    System.Console.WriteLine("Task:");
+                    System.Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5}", t.TaskId, t.EmployeeId,
+                        t.Description, t.CurrentPriority, t.Status, t.TimeExecution);
+                    System.Console.WriteLine("StatusHistories:");
+                    foreach (StatusHistoryDTO hs in taskService.GetAllStatusHistoryForGivenTask(t.EmployeeId))
                     {
-                        db.SaveChanges();
-                        System.Console.ReadKey();
-                    }*/
-/*        SqlException: The INSERT statement conflicted with the FOREIGN KEY constraint 
-        "FK_dbo.StatusHistories_dbo.Tasks_TaskId".The conflict occurred 
-            in database "TestConnection", table "dbo.Tasks", column 'TaskId'.*/
+                        System.Console.WriteLine("{0}, {1}, {2}, {3}", hs.StatusHistoryId, hs.Status,
+                            hs.DateAppearOfStatus, hs.TaskId);
+                    }
+                }
+            }
+            System.Console.ReadKey();
         }
     }
 }

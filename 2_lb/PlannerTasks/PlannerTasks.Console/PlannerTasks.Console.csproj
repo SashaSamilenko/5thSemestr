@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Models\EmployeeViewModel.cs" />
+    <Compile Include="Models\StatusHistoryViewModel.cs" />
     <Compile Include="Models\TaskViewModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

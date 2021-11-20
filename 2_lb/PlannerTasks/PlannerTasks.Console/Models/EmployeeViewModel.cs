@@ -11,9 +11,7 @@ namespace PlannerTasks.Console.Models
         public Int32 EmployeeId { get; set; }
         public String FirstName { get; set; }
         public String SecondName { get; set; }
-        //public TitleOfCourtesy TitleOfCourtesy { get; set; }
         public DateTime BirthDate { get; set; }
-        public String HomePhone { get; set; }
-        //public BusyRate BusyRate { get; set; }
+        public String PhoneNumber { get; set; }
     }
 }
