@@ -8,12 +8,10 @@ namespace PlannerTasks.WPF.Models
 {
     public class TaskViewModel
     {
-        public Int32 TaskId { get; set; }
+        public Int32 EmployeeId { get; set; }
         public String Description { get; set; }
         public TimeSpan TimeExecution { get; set; }
-        public DateTime StartTime { get; set; }
-        //public Status Status { get; set; }
-        //public Priority Priority { get; set; }
-        public Int32 EmployeeId { get; set; }
+        public Int32 Status { get; set; }
+        public Int32 Priority { get; set; }
     }
 }

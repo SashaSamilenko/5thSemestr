@@ -36,7 +36,7 @@ namespace PlannerTasks.DAL.Repositories
         /// <returns>IEnumerable of StatusHistory entities</returns>
         public IEnumerable<StatusHistory> GetAll()
         {
-            return db.StatusHistories.Include(sh=>sh.Task);
+            return db.StatusHistories;
         }
 
         /// <summary>

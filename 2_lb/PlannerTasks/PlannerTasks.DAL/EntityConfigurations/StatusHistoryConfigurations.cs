@@ -22,7 +22,7 @@ namespace PlannerTasks.DAL.EntityConfigurations
         public StatusHistoryConfigurations()
         {
             this.HasRequired(e => e.Task)
-                .WithMany(s => s.HistoryStatus);
+                .WithMany(s => s.HistoryStatuses);
             this.Property(p => p.DateAppearOfStatus)
                 .HasColumnType("datetime2")
                 .HasPrecision(0);

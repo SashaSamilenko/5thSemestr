@@ -77,6 +77,6 @@ namespace PlannerTasks.DAL.Entities
         /// <summary>
         /// That property implements relation one-to-many for HistoryStatus
         /// </summary>
-        public virtual List<StatusHistory> HistoryStatus { get; set; }
+        public virtual List<StatusHistory> HistoryStatuses { get; set; }
     }
 }

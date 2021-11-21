@@ -37,7 +37,7 @@ namespace PlannerTasks.DAL.Repositories
         /// <returns>IEnumerable of Employee entities</returns>
         public IEnumerable<Employee> GetAll()
         {
-            return db.Employees;
+            return db.Employees.Include(e=>e.Tasks);
         }
 
         /// <summary>

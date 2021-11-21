@@ -73,7 +73,7 @@ namespace PlannerTasks.BLL.Services
             return mapper.Map<IEnumerable<Employee>, List<EmployeeDTO>>(Database.Employees.GetAll());
         }
 
-        public EmployeeDTO GetEmployee(int id)// int? == System.Nullable<Int32>
+        public EmployeeDTO GetEmployee(int id)
         {
             Employee employee = Database.Employees.Get(id);
             if (employee == null)

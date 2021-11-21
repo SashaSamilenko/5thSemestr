@@ -36,7 +36,7 @@ namespace PlannerTasks.DAL.Repositories
         /// <returns>IEnumerable of Task entities</returns>
         public IEnumerable<Task> GetAll()
         {
-            return db.Tasks.Include(t => t.Employee);
+            return db.Tasks.Include(t => t.HistoryStatuses);
         }
 
         /// <summary>

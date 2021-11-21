@@ -8,6 +8,7 @@ namespace PlannerTasks.Console.Models
 {
     public class TaskViewModel
     {
+        public Int32 TaskId { get; set; }
         public Int32 EmployeeId { get; set; }
         public String Description { get; set; }
         public TimeSpan TimeExecution { get; set; }

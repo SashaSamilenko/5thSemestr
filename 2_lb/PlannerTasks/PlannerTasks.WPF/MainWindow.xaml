@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:PlannerTasks.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1130">
-    <Grid Margin="10">
+    <Grid Margin="10" Visibility="Visible" ClipToBounds="True">
 
-        <Grid.RowDefinitions>
+        <!--<Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -16,8 +16,68 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="602,475,0,0" VerticalAlignment="Top" Height="111" Width="260"/>
+        </Grid.ColumnDefinitions>-->
+        <Button Content="Button" HorizontalAlignment="Left" Margin="602,475,0,0" VerticalAlignment="Top" Height="111" Width="260" Click="Button_Click"/>
+        <TextBox HorizontalAlignment="Left" Margin="162,74,0,0" Text="Додати нову задачу для співробітника" TextWrapping="Wrap" VerticalAlignment="Top" Width="352" Height="29" RenderTransformOrigin="0.5,0.5" AutomationProperties.Name="Додати нову задачу для співробітника" TextChanged="TextBox_TextChanged" FontFamily="Times New Roman" FontSize="20" Visibility="Visible" ClipToBounds="True">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-1.185"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
+        <TextBox HorizontalAlignment="Left" Margin="52,28,0,0" Text="Перейти до вікна:" TextWrapping="Wrap" VerticalAlignment="Top" Width="352" Height="29" RenderTransformOrigin="0.5,0.5" AutomationProperties.Name="Додати нову задачу для співробітника" TextChanged="TextBox_TextChanged" FontFamily="Times New Roman" FontSize="20" Visibility="Visible" ClipToBounds="True">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-1.185"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
+        <TextBox HorizontalAlignment="Left" Margin="162,284,0,0" Text="Переглянути усі задачі" TextWrapping="Wrap" VerticalAlignment="Top" Width="352" Height="29" RenderTransformOrigin="0.5,0.5" AutomationProperties.Name="Додати нову задачу для співробітника" TextChanged="TextBox_TextChanged" FontFamily="Times New Roman" FontSize="20" Visibility="Visible" ClipToBounds="True">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-1.185"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
+        <TextBox HorizontalAlignment="Left" Margin="162,224,0,0" Text="Переглянути статус задачі" TextWrapping="Wrap" VerticalAlignment="Top" Width="352" Height="29" RenderTransformOrigin="0.5,0.5" AutomationProperties.Name="Додати нову задачу для співробітника" TextChanged="TextBox_TextChanged" FontFamily="Times New Roman" FontSize="20" Visibility="Visible" ClipToBounds="True">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-1.185"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
+        <TextBox HorizontalAlignment="Left" Margin="162,124,0,0" Text="Додати нового співробітника" TextWrapping="Wrap" VerticalAlignment="Top" Width="352" Height="29" RenderTransformOrigin="0.5,0.5" AutomationProperties.Name="Додати нову задачу для співробітника" TextChanged="TextBox_TextChanged" FontFamily="Times New Roman" FontSize="20" Visibility="Visible" ClipToBounds="True">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-1.185"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
+        <TextBox HorizontalAlignment="Left" Margin="164,176,0,0" Text="Змінити статус задачі" TextWrapping="Wrap" VerticalAlignment="Top" Width="352" Height="29" RenderTransformOrigin="0.5,0.5" AutomationProperties.Name="Додати нову задачу для співробітника" TextChanged="TextBox_TextChanged" FontFamily="Times New Roman" FontSize="20" Visibility="Visible" ClipToBounds="True">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-1.185"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
 
     </Grid>
 </Window>

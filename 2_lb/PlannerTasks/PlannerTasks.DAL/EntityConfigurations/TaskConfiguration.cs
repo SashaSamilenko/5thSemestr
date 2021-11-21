@@ -23,7 +23,7 @@ namespace PlannerTasks.DAL.EntityConfigurations
         {
             this.HasRequired(t => t.Employee)
                 .WithMany(e => e.Tasks);
-            this.HasMany(t => t.HistoryStatus)
+            this.HasMany(t => t.HistoryStatuses)
                 .WithRequired(sh => sh.Task);
             this.Property(t => t.Description).HasMaxLength(200);
             this.Property(p => p.StartTime)
