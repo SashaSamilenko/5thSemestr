@@ -10,5 +10,6 @@ namespace PlannerTasks.Console.Models
     {
         public Int32 TaskId { get; set; }
         public Int32 Status { get; set; }
+        public DateTime DateAppearOfStatus { get; set; }
     }
 }

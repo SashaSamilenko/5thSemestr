@@ -1,0 +1,2 @@
+Repair showing message about not valid password at 
+'log in'.

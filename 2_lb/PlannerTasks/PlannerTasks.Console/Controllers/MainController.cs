@@ -30,8 +30,10 @@ namespace PlannerTasks.Console.Controllers
                 });
 
                 IMapper mapper = config.CreateMapper();
-                TaskViewModel source = new TaskViewModel();
-                TaskDTO taskDto = mapper.Map<TaskViewModel, TaskDTO>(source);
+                TaskDTO taskDto = mapper.Map<TaskViewModel, TaskDTO>(task);
+
+                //Test
+                System.Console.WriteLine("Entered value of Id = {0}", taskDto.EmployeeId);
 
                 taskService.MakeTask(taskDto);
             }

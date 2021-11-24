@@ -38,25 +38,21 @@ namespace PlannerTasks.BLL.Services
         /// <param name="priorityValue"></param>
         public void MakeTask(TaskDTO taskDto)
         {
-            Console.WriteLine("Checking: {0}, {1}",Database.Employees.GetAll().Count(),taskDto.EmployeeId);
             Employee employee = Database.Employees.Get(taskDto.EmployeeId);
-
+            Console.WriteLine("!!! Entered employee ID: {0}", taskDto.EmployeeId);
             if (employee == null)
                 throw new NotExistEmployeeWithIdException("Employee did not find.");
 
-            //decimal sum = new Discount(0.1m).GetDiscountedPrice(phone.Price);
-
-            Task order = new Task
+            Database.Tasks.Create(new Task()
             {
                 Description = taskDto.Description,
                 TimeExecution = taskDto.TimeExecution,
                 StartTime = DateTime.Now,
-                Status = taskDto.Status,
+                Status = Status.NotStarted,
                 CurrentPriority = taskDto.CurrentPriority,
                 EmployeeId = employee.EmployeeId
-            };
-            Database.Tasks.Create(order);
-            /*Database.Save();*/
+            });
+            Database.Save();
 
             Database.StatusHistories.Create(new StatusHistory()
             {
