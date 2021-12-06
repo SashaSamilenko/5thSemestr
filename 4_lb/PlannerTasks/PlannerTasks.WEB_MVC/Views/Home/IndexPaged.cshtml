@@ -1,0 +1,96 @@
+﻿@using PlannerTasks.WEB_MVC.Models
+@model PagedList.IPagedList<EmployeeViewModel>
+
+@*for Html.PagedListPager*@
+@using PagedList.Mvc;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<div>
+    <h3>Список робітників</h3>
+
+    <p>@Html.ActionLink("Список історії зміни статусу задачі", "GetListOfStatusHistory")</p>
+    <p>@Html.ActionLink("Видалити задачу", "DeleteBook")</p>
+    <p>@Html.ActionLink("Змінити стутус задачі", "ChangeStatus")</p>
+
+    <table class="table table-striped">
+        <tr class="header">
+            <td><p>Ім'я</p></td>
+            <td><p>Прізивище</p></td>
+            <td><p>Дата народження</p></td>
+            <td><p>Номер телефону</p></td>
+            <td></td>
+        </tr>
+        @foreach (EmployeeViewModel b in Model)
+        {
+            <tr>
+                <td><p>@b.FirstName</p></td>
+                <td><p>@b.SecondName</p></td>
+                <td><p>@b.BirthDate</p></td>
+                <td><p>@b.PhoneNumber</p></td>
+                <td>
+                    <p>
+                        @Html.ActionLink("Редагувати", "EditBook", new { id = b.EmployeeId }) |
+                        @Html.ActionLink("Видалити", "DeleteBook", new { id = b.EmployeeId }) |
+                        @Html.ActionLink("Додати задачу до співробітника", "MakeTask", new { id = b.EmployeeId })|
+                        @Html.ActionLink("Список задач", "SearchTasks", new { id = b.EmployeeId })
+                    </p>
+                </td>
+            </tr>
+        }
+    </table>
+
+</div>
+Сторінка @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) з @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("IndexPaged", new { page }))
+
+
+<link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/scripts/jquery-3.1.0.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/scripts/bootstrap.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/scripts/jquery.unobtrusive-ajax.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+        $(function () {
+            $.ajaxSetup({ cache: false });
+            $(".bookItem").click(function (e) {
+
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                });
+            });
+        })
+</script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        jQuery('#scrollup img').mouseover(function () {
+            jQuery(this).animate({ opacity: 0.65 }, 100);
+        }).mouseout(function () {
+            jQuery(this).animate({ opacity: 1 }, 100);
+        }).click(function () {
+            window.scroll(0, 0);
+            return false;
+        });
+
+        jQuery(window).scroll(function () {
+            if (jQuery(document).scrollTop() > 0) {
+                jQuery('#scrollup').fadeIn('fast');
+            } else {
+                jQuery('#scrollup').fadeOut('fast');
+            }
+        });
+    });
+</script>
+
+@section Footer {
+    SomEnterprise@2021
+}

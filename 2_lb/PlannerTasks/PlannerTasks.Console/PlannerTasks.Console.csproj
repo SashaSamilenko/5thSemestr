@@ -81,11 +81,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\MainController.cs" />
-    <Compile Include="Models\EmployeeViewModel.cs" />
-    <Compile Include="Models\StatusHistoryViewModel.cs" />
-    <Compile Include="Models\TaskViewModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\EmployeeModule.cs" />
+    <Compile Include="Util\StatusHistoryModule.cs" />
     <Compile Include="Util\TaskModule.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -96,10 +95,6 @@
     <ProjectReference Include="..\PlannerTasks.BLL\PlannerTasks.BLL.csproj">
       <Project>{df6c9b4e-d7ac-4553-801c-32f2ecc3a2b0}</Project>
       <Name>PlannerTasks.BLL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PlannerTasks.DAL\PlannerTasks.DAL.csproj">
-      <Project>{27811d4e-f1ec-4a4f-b871-0849ff3702ee}</Project>
-      <Name>PlannerTasks.DAL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

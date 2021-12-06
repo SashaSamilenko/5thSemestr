@@ -1,0 +1,14 @@
+﻿@using PlannerTasks.WEB_MVC.Models
+@model IEnumerable<StatusHistoryViewModel>
+
+<div id="searchresults">
+    <h3>Історія задачі з номером : @Model.First().TaskId</h3>
+    <ul>
+        @foreach (StatusHistoryViewModel item in Model)
+        {
+            <li>@item.Status</li>
+            <li>@item.DateAppearOfStatus</li>
+            <p></p>
+        }
+    </ul>
+</div>

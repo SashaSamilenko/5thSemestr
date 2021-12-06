@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlannerTasks.BLL", "Planner
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlannerTasks.Console", "PlannerTasks.Console\PlannerTasks.Console.csproj", "{26A402F6-25C8-47C9-9D64-61DABFE470EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlannerTasks.WPF", "PlannerTasks.WPF\PlannerTasks.WPF.csproj", "{B1DDB6F3-C76B-4E23-B09C-07D54951E35E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{26A402F6-25C8-47C9-9D64-61DABFE470EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26A402F6-25C8-47C9-9D64-61DABFE470EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26A402F6-25C8-47C9-9D64-61DABFE470EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B1DDB6F3-C76B-4E23-B09C-07D54951E35E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1DDB6F3-C76B-4E23-B09C-07D54951E35E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1DDB6F3-C76B-4E23-B09C-07D54951E35E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1DDB6F3-C76B-4E23-B09C-07D54951E35E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

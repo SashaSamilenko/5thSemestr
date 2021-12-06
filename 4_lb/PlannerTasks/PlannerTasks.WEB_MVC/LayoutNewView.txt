@@ -1,0 +1,35 @@
+<!-- или сохранить как _ViewStart.cshtml в папке Views, удалив в представлениях секцию Layout.
+    В отдельном представлении секцию Layout использовать для замены глобальной мастер-страницы на локальную -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <nav>
+        <ul class="menu">
+            <li>@Html.ActionLink("Главная", "Index", "Home")</li>
+        </ul>
+    </nav>
+    @RenderBody()
+
+    <!-- RenderSection("Footer") даст исключение если в странице контента footer нет,
+         RenderSection("Footer", false) - footer не обязателен  в контенте -->
+    <!-- лучший вариант: -->
+    <footer>
+        @if (IsSectionDefined("Footer"))
+        {
+            @RenderSection("Footer")
+        }
+        else
+        {
+            <br /><span>ASP.Net MVC 5</span>
+        }
+    </footer>
+</body>
+</html>

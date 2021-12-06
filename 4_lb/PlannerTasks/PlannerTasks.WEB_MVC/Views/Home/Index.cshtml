@@ -1,0 +1,124 @@
+﻿@using PlannerTasks.WEB_MVC.Models
+@model IEnumerable<EmployeeViewModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h3>Список робітників</h3>
+
+    <p>@Html.ActionLink("Список історії зміни статусу для конкретної задачі", "SearchListOfStatusHistory")</p>
+    <p>@Html.ActionLink("Видалити задачу", "DeleteBook")</p>
+    <p>@Html.ActionLink("Змінити стутус задачі", "ChangeStatus")</p>
+
+    <table class="table table-striped">
+        <tr class="header">
+            <td><p>Ім'я</p></td>
+            <td><p>Прізивище</p></td>
+            <td><p>Дата народження</p></td>
+            <td><p>Номер телефону</p></td>
+            <td></td>
+        </tr>
+        @foreach (EmployeeViewModel b in Model)
+        {
+            <tr>
+                <td><p>@b.FirstName</p></td>
+                <td><p>@b.SecondName</p></td>
+                <td><p>@b.BirthDate</p></td>
+                <td><p>@b.PhoneNumber</p></td>
+                <td>
+                    <p>
+                        @Html.ActionLink("Редагувати", "EditBook", new { id = b.EmployeeId }) |
+                        @Html.ActionLink("Видалити", "DeleteBook", new { id = b.EmployeeId }) |
+                        @Html.ActionLink("Додати задачу до співробітника", "MakeTask", new { id = b.EmployeeId }) |
+                        @Html.ActionLink("Список задач", "SearchTasks", new { id = b.EmployeeId })
+                    </p>
+                </td>
+            </tr>
+        }
+    </table>
+    <p>@Html.ActionLink("Переход на пейджинговую страницу", "IndexPaged", new { page = 1 })</p>
+
+    <div style="position: absolute; right: 50px; top: 50px; width: 200px; height: 50px;">
+        <!--resource http://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_modal&stacked=h -->
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Simple Modal</button>
+    </div>
+</div>
+
+<!--button Up  -->
+<div id="scrollup"><img alt="Прокрутить вверх" src="~/Content/Images/Up.png"></div>
+
+<!-- Modal  dialog (simple) -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Заголовок модального окна</h4>
+            </div>
+            <div class="modal-body">
+                <p>Содержимое модального окна</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--Modal dialog with mvc model-->
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog modal-sm">
+    </div>
+</div>
+
+<link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/scripts/jquery-3.1.0.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/scripts/bootstrap.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/scripts/jquery.unobtrusive-ajax.min.js")" type="text/javascript"></script>
+
+<!--Modal dialog with mvc model-->
+<script type="text/javascript">
+        $(function () {
+            $.ajaxSetup({ cache: false });
+            $(".bookItem").click(function (e) {
+
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                });
+            });
+        })
+</script>
+
+<!--button Up  -->
+<script type="text/javascript">
+	jQuery( document ).ready(function() {
+	jQuery('#scrollup img').mouseover( function(){
+		jQuery( this ).animate({opacity: 0.65},100);
+	}).mouseout( function(){
+		jQuery( this ).animate({opacity: 1},100);
+	}).click( function(){
+		window.scroll(0 ,0);
+		return false;
+	});
+
+	jQuery(window).scroll(function(){
+		if ( jQuery(document).scrollTop() > 0 ) {
+			jQuery('#scrollup').fadeIn('fast');
+		} else {
+			jQuery('#scrollup').fadeOut('fast');
+		}
+	});
+});
+</script>
+
+
+@section Footer {
+    Это содержимое секции Footer
+}
