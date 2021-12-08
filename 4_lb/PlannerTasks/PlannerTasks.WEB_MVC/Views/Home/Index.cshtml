@@ -9,7 +9,6 @@
     <h3>Список робітників</h3>
 
     <p>@Html.ActionLink("Список історії зміни статусу для конкретної задачі", "SearchListOfStatusHistory")</p>
-    <p>@Html.ActionLink("Змінити стутус задачі", "ChangeStatus")</p>
 
     <table class="table table-striped">
         <tr class="header">
@@ -28,8 +27,8 @@
                 <td><p>@b.PhoneNumber</p></td>
                 <td>
                     <p>
-                        @Html.ActionLink("Редагувати", "ChangeStatusOfTask", new { id = b.EmployeeId }) |
-                        @Html.ActionLink("Видалити задачу", "DeleteTask", new { id = b.EmployeeId }) |
+                        @Html.ActionLink("Змінити статус конкретної задачі", "ChangeStatus", new { id = b.EmployeeId }) |
+                        @Html.ActionLink("Видалити конкретну задачу", "DeleteTask", new { id = b.EmployeeId }) |
                         @Html.ActionLink("Додати задачу до співробітника", "MakeTask", new { id = b.EmployeeId }) |
                         @Html.ActionLink("Список задач", "SearchTasks", new { id = b.EmployeeId })
                     </p>
@@ -37,7 +36,7 @@
             </tr>
         }
     </table>
-    <p>@Html.ActionLink("Переход на пейджинговую страницу", "IndexPaged", new { page = 1 })</p>
+    <p>@Html.ActionLink("Перехід на пейджингову сторінку", "IndexPaged", new { page = 1 })</p>
 
     <div style="position: absolute; right: 50px; top: 50px; width: 200px; height: 50px;">
         <!--resource http://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_modal&stacked=h -->
@@ -46,7 +45,7 @@
 </div>
 
 <!--button Up  -->
-<div id="scrollup"><img alt="Прокрутить вверх" src="~/Content/Images/Up.png"></div>
+<div id="scrollup"><img alt="Прокрутити вгору" src="~/Content/Images/Up.png"></div>
 
 <!-- Modal  dialog (simple) -->
 <div class="modal fade" id="myModal" role="dialog">

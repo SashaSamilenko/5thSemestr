@@ -1,17 +1,17 @@
 ﻿<div id="searchresults">
     @if (@ViewBag.TaskId != "N/A")
     {
-        <h1>Задача з номером @ViewBag.TaskId була успішно видалена!</h1>
+        <p>Задача з id = @ViewBag.TaskId  була успішно видалена!</p>
     }
     else
     {
-        if (@ViewBag.Message != null)
+        if (@ViewBag.Message == null)
         {
-            <h1>Задачі із заданим ідентифікатором не існує.</h1>
+            <p>Задачі із заданим ідентифікатором не існує.</p>
         }
         else 
         {
-            <h1>@ViewBag.Message</h1> 
+            <p>@ViewBag.Message</p> 
         }
     }
 </div>

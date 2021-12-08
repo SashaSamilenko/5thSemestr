@@ -1,0 +1,67 @@
+﻿@model PlannerTasks.WEB_MVC.Models.TaskViewModel
+
+<div id="searchresults">
+    @if (@ViewBag.ExistingFlag)
+    {
+        <p>@ViewBag.ErrorMessage</p>
+    }
+    else
+    {
+        using (Ajax.BeginForm("ChangeStatusConfirmation", new AjaxOptions
+        {
+            UpdateTargetId = "results",
+            LoadingElementId = "loading",
+            LoadingElementDuration = 0,
+            OnBegin = "OnBegin",
+            OnFailure = "OnFailure",
+            OnSuccess = "OnSuccess",
+            OnComplete = "OnComplete"
+        }))
+        {
+            @Html.HiddenFor(model => model.TaskId)
+            <b>Виберіть новий статус для задачі з id = @Model.TaskId: </b><br />
+            <span>   Execution: </span> @Html.RadioButton("NewStatus", "onExecution", true)
+            <span> | Testing: </span> @Html.RadioButton("NewStatus", "onTesting", false)
+            <span> | Expired: </span> @Html.RadioButton("NewStatus", "onExpired", false)
+            <span> | Done: </span> @Html.RadioButton("NewStatus", "onDone", false)
+            <br />
+
+            <input type="submit" value="Оновити статус" />
+        }
+        <img id="loading" src="@Url.Content("~/Content/Images/loader.gif")" style="display:none" />
+        <div id="loading0" style="display:none; color:Red; font-weight:bold;">
+            <p>Йде завантаження...</p>
+        </div>
+        <div id="results"></div>
+    }
+</div>
+<script src="@Url.Content("~/scripts/jquery-3.1.0.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/scripts/bootstrap.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/scripts/jquery.unobtrusive-ajax.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery-ui-1.12.0.min.js")" type="text/javascript"></script>
+
+@*for autocomplete*@
+<script type="text/javascript">
+    $(function () {
+        $("[source]").each(function () {
+            var target = $(this);
+            target.autocomplete({ source: target.attr("source") });
+        });
+    });
+</script>
+
+@*for ajax-form*@
+<script type="text/javascript">
+    function OnBegin() {
+        $('#results').empty();
+        //jQuery('#results').fadeOut('fast');
+    }
+    function OnSuccess(data) {
+        //jQuery('#results').fadeIn('fast');
+    }
+    function OnFailure(request, error) {
+        $("#results").html("Не вдалося змінити статус задачі для даного робітника!");
+    }
+    function OnComplete(request, status) {
+    }
+</script>

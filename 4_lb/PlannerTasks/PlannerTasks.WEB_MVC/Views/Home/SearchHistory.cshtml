@@ -2,7 +2,7 @@
 @model IEnumerable<StatusHistoryViewModel>
 
 <div id="searchresults">
-    <h1>Історія задачі з номером : @Model.First().TaskId</h1>
+    <p>Історія задачі з номером : @Model.First().TaskId</p>
     <ul>
         @foreach (StatusHistoryViewModel item in Model)
         {

@@ -1,0 +1,23 @@
+        @Html.RadioButtonFor(model => model.Status, "onExecution", new { @checked = true })
+        @Html.RadioButtonFor(model => model.Status, "onTesting", new { @checked = true })
+        @Html.RadioButtonFor(model => model.Status, "onExpired", new { @checked = true })
+        @Html.RadioButtonFor(model => model.Status, "onDone", new { @checked = true })
+
+
+
+
+
++++++++++++++++++++++++++
+            <input type="radio" id="1_status" name="onExecution" value="onExecution" />
+            <label for="1_status"> Set on execution status</label>
+            <br>
+            <input type="radio" id="2_status" name="onTesting" value="onTesting" />
+            <label for="2_status"> Set on testing status</label>
+            <br>
+            <input type="radio" id="3_status" name="onExpired" value="onExpired" />
+            <label for="3_status"> Set on expired status</label>
+            <br>
+            <input type="radio" id="4_status" name="onDone" value="onDone" />
+            <label for="4_status"> Set on done status</label>
+
+            @Html.ActionLink("Оновити статус", "ChangeStatusConfirmation", new { taskId = Model.TaskId, newStatus = 1 })

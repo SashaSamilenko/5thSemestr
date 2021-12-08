@@ -76,6 +76,18 @@ namespace PlannerTasks.BLL.Services
             Database.Tasks.Delete(id);
             Database.Save();
         }
+        public TaskDTO GetTask(int id)
+        {
+            Task task = Database.Tasks.Get(id);
+            if (task == null)
+                throw new NotExistTaskWithIdException("Task did not find with given id.");
+
+            MapperConfiguration config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<Task, TaskDTO>();
+            });
+            IMapper mapper = config.CreateMapper();
+            return mapper.Map<Task, TaskDTO>(task);
+        }
         public void CheckTimeExcecutionOfTasks(Object uow)
         {
             DateTime timeNow = DateTime.Now;

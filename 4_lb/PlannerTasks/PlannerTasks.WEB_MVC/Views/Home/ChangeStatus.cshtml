@@ -1,13 +1,11 @@
-﻿@model IEnumerable<PlannerTasks.WEB_MVC.Models.TaskViewModel>
-
+﻿@using PlannerTasks.WEB_MVC.Models
+@model IEnumerable<TaskViewModel>
 @{
-    ViewBag.Title = "DeleteTask";
+    ViewBag.Title = "ChangeStatus";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<p>DeleteTask</p>
-
-<p>Are you sure you want to delete this?</p>
+<p>ChangeStatus</p>
 <div>
     <p>TaskViewModel</p>
     <table class="table">
@@ -30,9 +28,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.StartTime)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmployeeId)
-            </th>
             <th></th>
         </tr>
 
@@ -48,23 +43,46 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.TimeExecution)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
+                @{
+                    String statusValue = "";
+                }
+            <td>
+                @{
+                    switch (@item.Status)
+                    {
+                        case 0:
+                            statusValue = "NotStarted";
+                            break;
+                        case 1:
+                            statusValue = "OnExecution";
+                            break;
+                        case 2:
+                            statusValue = "OnTesting";
+                            break;
+                        case 3:
+                            statusValue = "Expired";
+                            break;
+                        case 4:
+                            statusValue = "Done";
+                            break;
+                        default:
+                            statusValue = "N/A";
+                            break;
+                    }
+                }
+                @Html.DisplayFor(modelItem => @statusValue)
+            </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CurrentPriority)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StartTime)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EmployeeId)
-                </td>
             </tr>
         }
     </table>
 
-    @using (Ajax.BeginForm("DeleteTaskWithId", new AjaxOptions
+    @using (Ajax.BeginForm("ChangeStatusOfTask", new AjaxOptions
     {
         UpdateTargetId = "results",
         LoadingElementId = "loading",
@@ -75,8 +93,10 @@
         OnComplete = "OnComplete"
     }))
     {
-        <input type="number" name="TaskId" min="1" source='@Url.Action("AutocompleteSearch", "Home")' /> //input editBox with autocomplete using jQuery UI
-        <input type="submit" value="Видалити" />
+        <input id="employeeId" name="employeeId" type="hidden" value="@ViewBag.EmployeeId" />
+        <p>Введіть ідентифікатор задачі, для якої необхідно змінити статус:</p>
+        <input type="number" name="taskId" min=1 source='@Url.Action("AutocompleteSearch", "Home")' />
+        <input type="submit" value="Пошук статусів" />
     }
     <img id="loading" src="@Url.Content("~/Content/Images/loader.gif")" style="display:none" />
     <div id="loading0" style="display:none; color:Red; font-weight:bold;">
@@ -110,7 +130,7 @@
         //jQuery('#results').fadeIn('fast');
     }
     function OnFailure(request, error) {
-        $("#results").html("Не вдалося видалити завдання з заданим ідентифікатором!");
+        $("#results").html("Не вдалося змінити статус задачі для даного робітника!");
     }
     function OnComplete(request, status) {
     }

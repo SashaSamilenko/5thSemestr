@@ -18,7 +18,7 @@
         OnComplete = "OnComplete"
     }))
     {
-        <input type="text" name="TaskId" source='@Url.Action("AutocompleteSearch", "Home")' /> //input editBox with autocomplete using jQuery UI
+        <input type="number" name="TaskId" min=1 source='@Url.Action("AutocompleteSearch", "Home")' /> //input editBox with autocomplete using jQuery UI
         <input type="submit" value="Пошук" />
     }
     <img id="loading" src="@Url.Content("~/Content/Images/loader.gif")" style="display:none" />
@@ -59,5 +59,3 @@
     function OnComplete(request, status) {
     }
 </script>
-
-
