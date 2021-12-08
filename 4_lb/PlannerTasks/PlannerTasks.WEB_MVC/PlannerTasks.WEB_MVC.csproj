@@ -201,6 +201,8 @@
     <Content Include="Views\Home\SearchTasks.cshtml" />
     <Content Include="Views\Home\SearchListOfStatusHistory.cshtml" />
     <Content Include="Views\Home\SearchHistory.cshtml" />
+    <Content Include="Views\Home\DeleteTask.cshtml" />
+    <Content Include="Views\Home\DeleteTaskWithId.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

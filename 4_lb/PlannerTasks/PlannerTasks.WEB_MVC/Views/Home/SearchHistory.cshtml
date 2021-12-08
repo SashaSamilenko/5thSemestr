@@ -2,13 +2,33 @@
 @model IEnumerable<StatusHistoryViewModel>
 
 <div id="searchresults">
-    <h3>Історія задачі з номером : @Model.First().TaskId</h3>
+    <h1>Історія задачі з номером : @Model.First().TaskId</h1>
     <ul>
         @foreach (StatusHistoryViewModel item in Model)
         {
-            <li>@item.Status</li>
-            <li>@item.DateAppearOfStatus</li>
-            <p></p>
+            string status;
+            switch(@item.Status)
+            {
+                case 0:
+                    status = "NotStarted";
+                    break;
+                case 1:
+                    status = "OnExecution";
+                    break;
+                case 2:
+                    status = "OnTesting";
+                    break;
+                case 3:
+                    status = "Expired";
+                    break;
+                case 4:
+                    status = "Done";
+                    break;
+                default:
+                    status = "N/A";
+                    break;
+            }
+            <li>Статус: @status Дата встановлення: @item.DateAppearOfStatus</li>
         }
     </ul>
 </div>

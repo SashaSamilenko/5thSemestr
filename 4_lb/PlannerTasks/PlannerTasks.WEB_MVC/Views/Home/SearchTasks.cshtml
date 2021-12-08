@@ -7,7 +7,7 @@
 <h2>SearchTasks</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "MakeTask", new { id = ViewBag.EmployeeId })
 </p>
 <table class="table">
     <tr>
@@ -59,9 +59,8 @@
             @Html.DisplayFor(modelItem => item.EmployeeId)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            @Html.ActionLink("Змінити статус", "EditStatus", new { id=item.TaskId }) |
+            @Html.ActionLink("Видалити задачу", "DeleteTaskOnId", new { id = item.TaskId})
         </td>
     </tr>
 }

@@ -18,12 +18,12 @@
         OnComplete = "OnComplete"
     }))
     {
-        <input type="text" name="name" source='@Url.Action("AutocompleteSearch", "Home")' /> //input editBox with autocomplete using jQuery UI
+        <input type="text" name="TaskId" source='@Url.Action("AutocompleteSearch", "Home")' /> //input editBox with autocomplete using jQuery UI
         <input type="submit" value="Пошук" />
     }
     <img id="loading" src="@Url.Content("~/Content/Images/loader.gif")" style="display:none" />
     <div id="loading0" style="display:none; color:Red; font-weight:bold;">
-        <p>Идет загрузка...</p>
+        <p>Йде завантаження...</p>
     </div>
     <div id="results"></div>
 

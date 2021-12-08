@@ -27,7 +27,7 @@ namespace PlannerTasks.Console
             //Configuration of data_directory path
             AppDomain.CurrentDomain.SetData("DataDirectory", path);
 
-            var modules = new INinjectModule[] { new ServiceModule("TestInjection"), new TaskModule(), new EmployeeModule(), new StatusHistoryModule()};
+            var modules = new INinjectModule[] { new ServiceModule("PlannerDB"), new TaskModule(), new EmployeeModule(), new StatusHistoryModule()};
             var kernel = new StandardKernel(modules);
 
             ITaskService taskService = kernel.Get<ITaskService>();

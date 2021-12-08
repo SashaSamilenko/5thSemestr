@@ -9,7 +9,6 @@
     <h3>Список робітників</h3>
 
     <p>@Html.ActionLink("Список історії зміни статусу для конкретної задачі", "SearchListOfStatusHistory")</p>
-    <p>@Html.ActionLink("Видалити задачу", "DeleteBook")</p>
     <p>@Html.ActionLink("Змінити стутус задачі", "ChangeStatus")</p>
 
     <table class="table table-striped">
@@ -29,8 +28,8 @@
                 <td><p>@b.PhoneNumber</p></td>
                 <td>
                     <p>
-                        @Html.ActionLink("Редагувати", "EditBook", new { id = b.EmployeeId }) |
-                        @Html.ActionLink("Видалити", "DeleteBook", new { id = b.EmployeeId }) |
+                        @Html.ActionLink("Редагувати", "ChangeStatusOfTask", new { id = b.EmployeeId }) |
+                        @Html.ActionLink("Видалити задачу", "DeleteTask", new { id = b.EmployeeId }) |
                         @Html.ActionLink("Додати задачу до співробітника", "MakeTask", new { id = b.EmployeeId }) |
                         @Html.ActionLink("Список задач", "SearchTasks", new { id = b.EmployeeId })
                     </p>

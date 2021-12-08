@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Thread = System.Threading.Thread;
 using System.Web;
 using System.Web.Mvc;
 
@@ -55,47 +55,89 @@ namespace PlannerTasks.WEB_MVC.Controllers
 
         // Home/MakeTask
         [HttpGet]
-        public ActionResult MakeTask()
+        public ActionResult MakeTask(int id)
         {
+            ViewBag.EmployeeId = id;
             return View();
         }
         [HttpPost]
-        public ActionResult MakeTask(int id, TaskViewModel task)
+        public ActionResult MakeTask(TaskViewModel task)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
+                MapperConfiguration config = new MapperConfiguration(cfg =>
                 {
-                    MapperConfiguration config = new MapperConfiguration(cfg =>
-                    {
-                        cfg.CreateMap<TaskViewModel, TaskDTO>()
-                        .ForMember("TimeExecution", te => te.MapFrom(c => new TimeSpan(c.TimeExecution, 0, 0)));
-                    });
+                    cfg.CreateMap<TaskViewModel, TaskDTO>()
+                    .ForMember("TimeExecution", te => te.MapFrom(c => new TimeSpan(c.TimeExecution, 0, 0)));
+                });
 
-                    IMapper mapper = config.CreateMapper();
-                    TaskDTO taskDto = mapper.Map<TaskViewModel, TaskDTO>(task);
+                IMapper mapper = config.CreateMapper();
+                TaskDTO taskDto = mapper.Map<TaskViewModel, TaskDTO>(task);
 
-                    taskDto.Status = 1;
-                    taskService.MakeTask(taskDto);
+                taskDto.Status = 1;
+                taskService.MakeTask(taskDto);
 
-                    return RedirectToAction("Index");
-                }
-                catch (NotExistEmployeeWithIdException ex)
-                {
-                    throw ex;
-                }
+                return RedirectToAction("Index");
             }
-            return View(task);
+            catch (NotExistEmployeeWithIdException ex)
+            {
+                throw ex;
+                //return RedirectToAction("Index");
+            }
         }
-        public void DeleteTask(Int32 id)
+
+        [HttpGet]
+        public ActionResult DeleteTaskOnId(int id)
         {
             try
             {
                 taskService.DeleteTask(id);
+                return RedirectToAction("Index");
+            }
+            catch (NotExistTaskWithIdException ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        public ActionResult DeleteTask(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+            try 
+            {
+                IEnumerable<TaskDTO> taskDtos = employeeService.GetAllTaskForGivenEmployee((int)id);
+                MapperConfiguration config = new MapperConfiguration(cfg => {
+                    cfg.CreateMap<TaskDTO, TaskViewModel>()
+                    .ForMember("TimeExecution", te => te.MapFrom(c => c.TimeExecution.Hours));
+                });
+                IMapper mapper = config.CreateMapper();
+                return View(mapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
             }
             catch(NotExistTaskWithIdException ex)
             {
-                throw ex;
+                return HttpNotFound(ex.Message);
+            }
+        }
+
+        [HttpPost]//, ActionName("DeleteTask")]
+        public ActionResult DeleteTaskWithId(int TaskId)
+        {
+            try
+            {
+                ViewBag.TaskId = TaskId.ToString();
+                taskService.DeleteTask(TaskId);
+
+                return RedirectToAction("Index");
+            }
+            catch(NotExistTaskWithIdException ex)
+            {
+                ViewBag.TaskId = "N/A";
+                ViewBag.Message = "Не існує задачі із заданим ідентифікатором. Будь ласка, спробуйте ввести ідентифікатор ще раз.";
+                return HttpNotFound();
             }
         }
 
@@ -125,6 +167,7 @@ namespace PlannerTasks.WEB_MVC.Controllers
         {
             try
             {
+                ViewBag.EmployeeId = id;
                 IEnumerable<TaskDTO> taskDtos = employeeService.GetAllTaskForGivenEmployee(id);
                 MapperConfiguration config = new MapperConfiguration(cfg => {
                     cfg.CreateMap<TaskDTO, TaskViewModel>()
@@ -140,20 +183,29 @@ namespace PlannerTasks.WEB_MVC.Controllers
         }
 
         // Home/Search
+        [HttpGet]
         public ActionResult SearchListOfStatusHistory()
         {
             return View();
         }
 
-        [HttpGet]
-        public ActionResult SearchHistory(int identifier)
+        [HttpPost]
+        public ActionResult SearchHistory(int TaskId)
         {
-            IEnumerable<StatusHistoryDTO> statusHistoryDtos = statusHistoryService.GetAllStatusHistoryForGivenTask(identifier).ToList();
-            MapperConfiguration config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<StatusHistoryDTO, StatusHistoryViewModel>();
-            });
-            IMapper mapper = config.CreateMapper();
-            return View(mapper.Map<IEnumerable<StatusHistoryDTO>, IEnumerable<StatusHistoryViewModel>>(statusHistoryDtos));
+            //Thread.Sleep(1000);
+            try 
+            {
+                IEnumerable<StatusHistoryDTO> statusHistoryDtos = statusHistoryService.GetAllStatusHistoryForGivenTask(TaskId).ToList();
+                MapperConfiguration config = new MapperConfiguration(cfg => {
+                    cfg.CreateMap<StatusHistoryDTO, StatusHistoryViewModel>();
+                });
+                IMapper mapper = config.CreateMapper();
+                return PartialView(mapper.Map<IEnumerable<StatusHistoryDTO>, IEnumerable<StatusHistoryViewModel>>(statusHistoryDtos));
+            }
+            catch(NotExistTaskWithIdException ex)
+            {
+                return HttpNotFound();
+            }
         }
 
         [HttpPost]
