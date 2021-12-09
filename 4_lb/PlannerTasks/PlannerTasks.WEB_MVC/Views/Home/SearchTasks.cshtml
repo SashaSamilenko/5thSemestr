@@ -36,33 +36,59 @@
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.TaskId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TimeExecution)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CurrentPriority)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmployeeId)
-        </td>
-        <td>
-            @Html.ActionLink("Змінити статус", "EditStatus", new { id=item.TaskId }) |
-            @Html.ActionLink("Видалити задачу", "DeleteTaskOnId", new { id = item.TaskId})
-        </td>
-    </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.TaskId)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Description)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.TimeExecution)
+    </td>
+    @{
+        String statusValue = "";
+    }
+    <td>
+        @{
+            switch (@item.Status)
+            {
+                case 0:
+                    statusValue = "NotStarted";
+                    break;
+                case 1:
+                    statusValue = "OnExecution";
+                    break;
+                case 2:
+                    statusValue = "OnTesting";
+                    break;
+                case 3:
+                    statusValue = "Expired";
+                    break;
+                case 4:
+                    statusValue = "Done";
+                    break;
+                default:
+                    statusValue = "N/A";
+                    break;
+            }
+        }
+        @Html.DisplayFor(modelItem => @statusValue)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CurrentPriority)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.StartTime)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.EmployeeId)
+    </td>
+    <td>
+        @Html.ActionLink("Змінити статус", "ChangeStatusOfTaskWithId", new { employeeId = item.EmployeeId, taskId = item.TaskId }) |
+        @Html.ActionLink("Видалити задачу", "DeleteTaskOnId", new { id = item.TaskId })
+    </td>
+</tr>
 }
 
 </table>

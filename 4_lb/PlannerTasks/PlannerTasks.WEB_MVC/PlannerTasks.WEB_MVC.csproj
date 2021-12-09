@@ -206,6 +206,8 @@
     <Content Include="Views\Home\ChangeStatus.cshtml" />
     <Content Include="Views\Home\ChangeStatusOfTask.cshtml" />
     <Content Include="Views\Home\ChangeStatusConfirmation.cshtml" />
+    <Content Include="Views\Home\PostErrorMessage.cshtml" />
+    <Content Include="Views\Home\ChangeStatusOfTaskWithId.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

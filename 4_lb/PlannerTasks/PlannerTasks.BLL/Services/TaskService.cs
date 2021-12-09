@@ -33,7 +33,7 @@ namespace PlannerTasks.BLL.Services
             Database = uow;
             Thread.TimerCallback tm = new Thread.TimerCallback(CheckTimeExcecutionOfTasksAsync);
             // создаем таймер
-            Thread.Timer timer = new Thread.Timer(tm, uow, 5000, 600000);
+            //Thread.Timer timer = new Thread.Timer(tm, uow, 5000, 600000);
         }
 
         /// <summary>

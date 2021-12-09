@@ -63,27 +63,33 @@ namespace PlannerTasks.WEB_MVC.Controllers
         [HttpPost]
         public ActionResult MakeTask(TaskViewModel task)
         {
-            try
+            if (ModelState.IsValidField("Description") && ModelState.IsValidField("TimeExecution") && ModelState.IsValidField("CurrentPriority"))
             {
-                MapperConfiguration config = new MapperConfiguration(cfg =>
+                try
                 {
-                    cfg.CreateMap<TaskViewModel, TaskDTO>()
-                    .ForMember("TimeExecution", te => te.MapFrom(c => new TimeSpan(c.TimeExecution, 0, 0)));
-                });
+                    MapperConfiguration config = new MapperConfiguration(cfg =>
+                    {
+                        cfg.CreateMap<TaskViewModel, TaskDTO>()
+                        .ForMember("TimeExecution", te => te.MapFrom(c => new TimeSpan(c.TimeExecution, 0, 0)));
+                    });
 
-                IMapper mapper = config.CreateMapper();
-                TaskDTO taskDto = mapper.Map<TaskViewModel, TaskDTO>(task);
+                    IMapper mapper = config.CreateMapper();
+                    TaskDTO taskDto = mapper.Map<TaskViewModel, TaskDTO>(task);
 
-                taskDto.Status = 1;
-                taskService.MakeTask(taskDto);
+                    taskDto.Status = 1;
+                    taskService.MakeTask(taskDto);
 
-                return RedirectToAction("Index");
+                    return RedirectToAction("Index");
+                }
+                catch (NotExistTaskWithIdException ex)
+                {
+                    //ViewBag.ErrorMessage = ex.Message;
+                    //return PartialView("PostErrorMessage");
+                    return RedirectToAction("Index");
+                }
             }
-            catch (NotExistEmployeeWithIdException ex)
-            {
-                throw ex;
-                //return RedirectToAction("Index");
-            }
+            ViewBag.EmployeeId = task.EmployeeId;
+            return View(task);
         }
 
         [HttpGet]
@@ -105,7 +111,8 @@ namespace PlannerTasks.WEB_MVC.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                ViewBag.ErrorMessage = "Ідентифікатор не може приймати nullable-значення.";
+                return View();
             }
             try 
             {
@@ -115,28 +122,41 @@ namespace PlannerTasks.WEB_MVC.Controllers
                     .ForMember("TimeExecution", te => te.MapFrom(c => c.TimeExecution.Hours));
                 });
                 IMapper mapper = config.CreateMapper();
+                ViewBag.EmployeeId = id;
                 return View(mapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
             }
-            catch(NotExistTaskWithIdException ex)
+            catch(NotExistEmployeeWithIdException ex)
             {
-                return HttpNotFound(ex.Message);
+                ViewBag.ErrorMessage = ex.Message;
+                return View();
             }
         }
 
-        [HttpPost]//, ActionName("DeleteTask")]
-        public ActionResult DeleteTaskWithId(int TaskId)
+        [HttpPost]
+        public ActionResult DeleteTaskWithId(int employeeId, int taskId)
         {
             try
             {
-                ViewBag.TaskId = TaskId.ToString();
-                taskService.DeleteTask(TaskId);
+                IEnumerable<TaskDTO> taskDTOs = employeeService.GetAllTaskForGivenEmployee(employeeId).ToList();
+                TaskDTO tempTaskDto = taskService.GetTask(taskId);
+                if (taskDTOs.Where(t => t.TaskId == taskId).ToList().Count() == 0)
+                {
+                    ViewBag.ErrorMessage = "Співробітник не виконує завдання із даним ідентифікатором. Будь ласка, повторіть ввід.";
+                    ViewBag.ExistingFlag = false;
+                    ViewBag.TaskId = "N/A";
+                    return PartialView();
+                }
+                ViewBag.TaskId = taskId.ToString();
+                ViewBag.ExistingFlag = true;
+                taskService.DeleteTask(taskId);
 
                 return PartialView();
             }
             catch(NotExistTaskWithIdException ex)
             {
                 ViewBag.TaskId = "N/A";
-                ViewBag.Message = "Не існує задачі із заданим ідентифікатором. Будь ласка, спробуйте ввести ідентифікатор ще раз.";
+                ViewBag.ErrorMessage = "Не існує задачі із заданим ідентифікатором. Будь ласка, спробуйте ввести ідентифікатор ще раз.";
+                ViewBag.ExistingFlag = false;
                 return PartialView();
             }
         }
@@ -150,16 +170,16 @@ namespace PlannerTasks.WEB_MVC.Controllers
             }
             try
             {
-                ViewBag.EmployeeId = id;
                 IEnumerable<TaskDTO> taskDtos = employeeService.GetAllTaskForGivenEmployee((int)id);
                 MapperConfiguration config = new MapperConfiguration(cfg => {
                     cfg.CreateMap<TaskDTO, TaskViewModel>()
                     .ForMember("TimeExecution", te => te.MapFrom(c => c.TimeExecution.Hours));
                 });
                 IMapper mapper = config.CreateMapper();
+                ViewBag.EmployeeId = id;
                 return View(mapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
             }
-            catch (NotExistTaskWithIdException ex)
+            catch (NotExistEmployeeWithIdException ex)
             {
                 return HttpNotFound(ex.Message);
             }
@@ -194,6 +214,38 @@ namespace PlannerTasks.WEB_MVC.Controllers
                 ViewBag.ErrorMessage = "Не знайдено жодного завдання із заданим ідентифікатором.";
                 ViewBag.ExistingFlag = true;
                 return PartialView();
+            }
+        }
+
+        [HttpGet]
+        public ActionResult ChangeStatusOfTaskWithId(int employeeId, int taskId)
+        {
+            try
+            {
+                IEnumerable<TaskDTO> taskDTOs = employeeService.GetAllTaskForGivenEmployee(employeeId).ToList();
+                TaskDTO taskDto = taskService.GetTask(taskId);
+                if (taskDTOs.Where(t => t.TaskId == taskId).ToList().Count() == 0)
+                {
+                    ViewBag.ErrorMessage = "Співробітник не виконує завдання із даним ідентифікатором. Будь ласка, повторіть ввід.";
+                    ViewBag.ExistingFlag = true;
+                    return View();
+                }
+
+                MapperConfiguration config = new MapperConfiguration(cfg => {
+                    cfg.CreateMap<TaskDTO, TaskViewModel>()
+                    .ForMember("TimeExecution", te => te.MapFrom(c => c.TimeExecution.Hours));
+                });
+                IMapper mapper = config.CreateMapper();
+
+                ViewBag.ExistingFlag = false;
+
+                return View(mapper.Map<TaskDTO, TaskViewModel>(taskDto));
+            }
+            catch (NotExistTaskWithIdException ex)
+            {
+                ViewBag.ErrorMessage = "Не знайдено жодного завдання із заданим ідентифікатором.";
+                ViewBag.ExistingFlag = true;
+                return View();
             }
         }
 

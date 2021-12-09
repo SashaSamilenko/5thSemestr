@@ -3,3 +3,8 @@ Repair showing message about not valid password at 'log in'.
 Add button to page 'Load map' for save destinated points.
 
 Add loading window with feedback info.
+
+<input type="hidden" value="@ViewBag.EmployeeId" name="EmployeeId" />
+    @Html.HiddenFor(model => model.Status)
+    @Html.HiddenFor(model => model.StartTime)
+    @Html.HiddenFor(model => model.TaskId)

@@ -1,3 +1,5 @@
+    @Html.AntiForgeryToken()
+
         <div class="form-group">
             @Html.LabelFor(model => model.TaskId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

@@ -13,9 +13,7 @@
 <div>
     <h3>Список робітників</h3>
 
-    <p>@Html.ActionLink("Список історії зміни статусу задачі", "GetListOfStatusHistory")</p>
-    <p>@Html.ActionLink("Видалити задачу", "DeleteBook")</p>
-    <p>@Html.ActionLink("Змінити стутус задачі", "ChangeStatus")</p>
+    <p>@Html.ActionLink("Список історії зміни статусу для конкретної задачі", "SearchListOfStatusHistory")</p>
 
     <table class="table table-striped">
         <tr class="header">
@@ -34,16 +32,16 @@
                 <td><p>@b.PhoneNumber</p></td>
                 <td>
                     <p>
-                        @Html.ActionLink("Редагувати", "EditBook", new { id = b.EmployeeId }) |
-                        @Html.ActionLink("Видалити", "DeleteBook", new { id = b.EmployeeId }) |
-                        @Html.ActionLink("Додати задачу до співробітника", "MakeTask", new { id = b.EmployeeId })|
+                        @Html.ActionLink("Змінити статус конкретної задачі", "ChangeStatus", new { id = b.EmployeeId }) |
+                        @Html.ActionLink("Видалити конкретну задачу", "DeleteTask", new { id = b.EmployeeId }) |
+                        @Html.ActionLink("Додати задачу до співробітника", "MakeTask", new { id = b.EmployeeId }) |
                         @Html.ActionLink("Список задач", "SearchTasks", new { id = b.EmployeeId })
                     </p>
                 </td>
             </tr>
         }
     </table>
-
+    <p>@Html.ActionLink("Перехід на пейджингову сторінку", "IndexPaged", new { page = 1 })</p>
 </div>
 Сторінка @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) з @Model.PageCount
 

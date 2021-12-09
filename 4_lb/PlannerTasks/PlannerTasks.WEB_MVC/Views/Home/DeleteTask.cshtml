@@ -7,98 +7,120 @@
 
 <p>DeleteTask</p>
 
-<p>Are you sure you want to delete this?</p>
 <div>
-    <p>TaskViewModel</p>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TaskId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TimeExecution)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CurrentPriority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmployeeId)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
+    @if (Model != null)
+    {
+        <p>TaskViewModel</p>
+        <table class="table">
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TaskId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeExecution)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CurrentPriority)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EmployeeId)
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.TaskId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TimeExecution)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CurrentPriority)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StartTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EmployeeId)
+                </th>
+                <th></th>
             </tr>
-        }
-    </table>
 
-    @using (Ajax.BeginForm("DeleteTaskWithId", new AjaxOptions
-    {
-        UpdateTargetId = "results",
-        LoadingElementId = "loading",
-        LoadingElementDuration = 0,
-        OnBegin = "OnBegin",
-        OnFailure = "OnFailure",
-        OnSuccess = "OnSuccess",
-        OnComplete = "OnComplete"
-    }))
-    {
-        <input type="number" name="TaskId" min="1" source='@Url.Action("AutocompleteSearch", "Home")' /> //input editBox with autocomplete using jQuery UI
-        <input type="submit" value="Видалити" />
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TaskId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeExecution)
+                    </td>
+                    @{
+                        String statusValue = "";
+                    }
+                    <td>
+                        @{
+                            switch (@item.Status)
+                            {
+                                case 0:
+                                    statusValue = "NotStarted";
+                                    break;
+                                case 1:
+                                    statusValue = "OnExecution";
+                                    break;
+                                case 2:
+                                    statusValue = "OnTesting";
+                                    break;
+                                case 3:
+                                    statusValue = "Expired";
+                                    break;
+                                case 4:
+                                    statusValue = "Done";
+                                    break;
+                                default:
+                                    statusValue = "N/A";
+                                    break;
+                            }
+                        }
+                        @Html.DisplayFor(modelItem => @statusValue)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CurrentPriority)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EmployeeId)
+                    </td>
+                </tr>
+            }
+        </table>
+        using (Ajax.BeginForm("DeleteTaskWithId", new AjaxOptions
+        {
+            UpdateTargetId = "results",
+            LoadingElementId = "loading",
+            LoadingElementDuration = 0,
+            OnBegin = "OnBegin",
+            OnFailure = "OnFailure",
+            OnSuccess = "OnSuccess",
+            OnComplete = "OnComplete"
+        }))
+        {
+            <input id="employeeId" name="employeeId" type="hidden" value="@ViewBag.EmployeeId" />
+            <input type="number" name="taskId" min="1" /> //input editBox with autocomplete using jQuery UI
+            <input type="submit" value="Видалити" />
+        }
+        <img id="loading" src="@Url.Content("~/Content/Images/loader.gif")" style="display:none" />
+        <div id="loading0" style="display:none; color:Red; font-weight:bold;">
+            <p>Йде завантаження...</p>
+        </div>
+        <div id="results"></div>
     }
-    <img id="loading" src="@Url.Content("~/Content/Images/loader.gif")" style="display:none" />
-    <div id="loading0" style="display:none; color:Red; font-weight:bold;">
-        <p>Йде завантаження...</p>
-    </div>
-    <div id="results"></div>
+    else
+    {
+        <p>@ViewBag.ErrorMessage</p>
+    }
 
 </div>
 <script src="@Url.Content("~/scripts/jquery-3.1.0.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/scripts/bootstrap.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/scripts/jquery.unobtrusive-ajax.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery-ui-1.12.0.min.js")" type="text/javascript"></script>
-
-@*for autocomplete*@
-<script type="text/javascript">
-    $(function () {
-        $("[source]").each(function () {
-            var target = $(this);
-            target.autocomplete({ source: target.attr("source") });
-        });
-    });
-</script>
 
 @*for ajax-form*@
 <script type="text/javascript">
@@ -115,3 +137,7 @@
     function OnComplete(request, status) {
     }
 </script>
+
+<div>
+    @Html.ActionLink("Повернутися до списку", "Index")
+</div>
