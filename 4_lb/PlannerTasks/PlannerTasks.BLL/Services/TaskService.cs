@@ -25,6 +25,20 @@ namespace PlannerTasks.BLL.Services
         IUnitOfWork Database { get; set; }
 
         /// <summary>
+        /// Property presents of mapper of TaskDTO to Task
+        /// </summary>
+        IMapper mapperToTaskEntity { get; set; }
+        /// <summary>
+        /// Property presents of mapper of Task to TaskDTO
+        /// </summary>
+        IMapper mapperToTaskDTO { get; set; }
+
+        /// <summary>
+        /// Property presents of mapper of StatusHistoryDTO to StatusHistory
+        /// </summary>
+        IMapper mapperToStatusHistoryEntity { get; set; }
+
+        /// <summary>
         /// Constructor with one parameter
         /// </summary>
         /// <param name="uow"></param>
@@ -32,6 +46,22 @@ namespace PlannerTasks.BLL.Services
         {
             Database = uow;
             Thread.TimerCallback tm = new Thread.TimerCallback(CheckTimeExcecutionOfTasksAsync);
+            MapperConfiguration configTaskToEntity = new MapperConfiguration(cfg => {
+                cfg.CreateMap<TaskDTO, Task>()
+                .ForMember("StartTime", te => te.MapFrom(c => DateTime.Now))
+                .ForMember("Status", te => te.MapFrom(c => Status.NotStarted))
+                .ForMember("CurrentPriority", te => te.MapFrom(c => (Priority)c.CurrentPriority));
+            });
+            MapperConfiguration configTaskToDto = new MapperConfiguration(cfg => {
+                cfg.CreateMap<Task, TaskDTO>()
+                .ForMember("Status", te => te.MapFrom(c => (int)c.Status))
+                .ForMember("CurrentPriority", te => te.MapFrom(c => (int)c.CurrentPriority));
+            });
+            MapperConfiguration configStatusHistoryToEntity = new MapperConfiguration(cfg => cfg.CreateMap<StatusHistoryDTO, StatusHistory>());
+
+            mapperToStatusHistoryEntity = configStatusHistoryToEntity.CreateMapper();
+            mapperToTaskEntity = configTaskToEntity.CreateMapper();
+            mapperToTaskDTO = configTaskToDto.CreateMapper();
             // создаем таймер
             //Thread.Timer timer = new Thread.Timer(tm, uow, 5000, 600000);
         }
@@ -44,27 +74,20 @@ namespace PlannerTasks.BLL.Services
         public void MakeTask(TaskDTO taskDto)
         {
             Employee employee = Database.Employees.Get(taskDto.EmployeeId);
-            Console.WriteLine("!!! Entered employee ID: {0}", taskDto.EmployeeId);
             if (employee == null)
                 throw new NotExistEmployeeWithIdException("Employee did not find.");
 
-            Database.Tasks.Create(new Task()
-            {
-                Description = taskDto.Description,
-                TimeExecution = taskDto.TimeExecution,
-                StartTime = DateTime.Now,
-                Status = Status.NotStarted,
-                CurrentPriority = (Priority)taskDto.CurrentPriority,
-                EmployeeId = employee.EmployeeId
-            });
+            
+            Database.Tasks.Create(mapperToTaskEntity.Map<TaskDTO, Task>(taskDto));
             Database.Save();
 
-            Database.StatusHistories.Create(new StatusHistory()
-            {
+            StatusHistoryDTO statusHistoryDTO = new StatusHistoryDTO() {
                 DateAppearOfStatus = DateTime.Now,
-                Status = Status.NotStarted,
+                Status = (int)Status.NotStarted,
                 TaskId = Database.Tasks.GetAll().Last().TaskId
-            });
+            };
+            
+            Database.StatusHistories.Create(mapperToStatusHistoryEntity.Map<StatusHistoryDTO, StatusHistory>(statusHistoryDTO));
             Database.Save();
         }
         public void DeleteTask(int id)
@@ -81,12 +104,7 @@ namespace PlannerTasks.BLL.Services
             Task task = Database.Tasks.Get(id);
             if (task == null)
                 throw new NotExistTaskWithIdException("Task did not find with given id.");
-
-            MapperConfiguration config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<Task, TaskDTO>();
-            });
-            IMapper mapper = config.CreateMapper();
-            return mapper.Map<Task, TaskDTO>(task);
+            return mapperToTaskDTO.Map<Task, TaskDTO>(task);
         }
         public void CheckTimeExcecutionOfTasks(Object uow)
         {
@@ -95,7 +113,6 @@ namespace PlannerTasks.BLL.Services
             IList<Task> tasks = unitOfWork.Tasks.GetAll().ToList();
             foreach(Task task in tasks)
             {
-                Console.WriteLine("Status of task = {0}", task.Status);
                 if (task.Status == Status.OnExecution || task.Status == Status.OnTesting)
                 {
                     TimeSpan subTime = timeNow.Subtract(task.StartTime);

@@ -26,9 +26,13 @@ namespace PlannerTasks.WEB_MVC.Controllers
 {
     public class HomeController: Controller
     {
-        ITaskService taskService;
-        IEmployeeService employeeService;
-        IStatusHistoryService statusHistoryService;
+        ITaskService taskService { get; set; }
+        IEmployeeService employeeService { get; set; }
+        IStatusHistoryService statusHistoryService { get; set; }
+        IMapper mapperToTaskDTO { get; set; }
+        IMapper mapperToTaskViewModel { get; set; }
+        IMapper mapperToStatusHistoryViewModel { get; set; }
+        IMapper mapperToEmployeeViewModel { get; set; }
         public HomeController()
         {
             var modules = new INinjectModule[] { new ServiceModule("PlannerDB"), new TaskModule(), new EmployeeModule(), new StatusHistoryModule() };
@@ -36,6 +40,29 @@ namespace PlannerTasks.WEB_MVC.Controllers
             taskService = kernel.Get<ITaskService>();
             employeeService = kernel.Get<IEmployeeService>();
             statusHistoryService = kernel.Get<IStatusHistoryService>();
+
+            MapperConfiguration configToTaskDTO = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<TaskViewModel, TaskDTO>()
+                .ForMember("TimeExecution", te => te.MapFrom(c => new TimeSpan(c.TimeExecution, 0, 0)));
+            });
+            mapperToTaskDTO = configToTaskDTO.CreateMapper();
+
+            MapperConfiguration configToTaskViewModel = new MapperConfiguration(cfg => {
+                cfg.CreateMap<TaskDTO, TaskViewModel>()
+                .ForMember("TimeExecution", te => te.MapFrom(c => c.TimeExecution.Hours));
+            });
+            mapperToTaskViewModel = configToTaskViewModel.CreateMapper();
+
+            MapperConfiguration configToStatusHitoryViewModel = new MapperConfiguration(cfg => {
+                cfg.CreateMap<StatusHistoryDTO, StatusHistoryViewModel>();
+            });
+            mapperToStatusHistoryViewModel = configToStatusHitoryViewModel.CreateMapper();
+
+            MapperConfiguration configToEmployeeViewModel = new MapperConfiguration(cfg => {
+                cfg.CreateMap<EmployeeDTO, EmployeeViewModel>();
+            });
+            mapperToEmployeeViewModel = configToEmployeeViewModel.CreateMapper();
         }
 
         // /Home/Index
@@ -66,25 +93,14 @@ namespace PlannerTasks.WEB_MVC.Controllers
             if (ModelState.IsValidField("Description") && ModelState.IsValidField("TimeExecution") && ModelState.IsValidField("CurrentPriority"))
             {
                 try
-                {
-                    MapperConfiguration config = new MapperConfiguration(cfg =>
-                    {
-                        cfg.CreateMap<TaskViewModel, TaskDTO>()
-                        .ForMember("TimeExecution", te => te.MapFrom(c => new TimeSpan(c.TimeExecution, 0, 0)));
-                    });
-
-                    IMapper mapper = config.CreateMapper();
-                    TaskDTO taskDto = mapper.Map<TaskViewModel, TaskDTO>(task);
-
-                    taskDto.Status = 1;
+                { 
+                    TaskDTO taskDto = mapperToTaskDTO.Map<TaskViewModel, TaskDTO>(task);
+                    taskDto.Status = 0;
                     taskService.MakeTask(taskDto);
-
                     return RedirectToAction("Index");
                 }
                 catch (NotExistTaskWithIdException ex)
                 {
-                    //ViewBag.ErrorMessage = ex.Message;
-                    //return PartialView("PostErrorMessage");
                     return RedirectToAction("Index");
                 }
             }
@@ -117,13 +133,8 @@ namespace PlannerTasks.WEB_MVC.Controllers
             try 
             {
                 IEnumerable<TaskDTO> taskDtos = employeeService.GetAllTaskForGivenEmployee((int)id);
-                MapperConfiguration config = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<TaskDTO, TaskViewModel>()
-                    .ForMember("TimeExecution", te => te.MapFrom(c => c.TimeExecution.Hours));
-                });
-                IMapper mapper = config.CreateMapper();
                 ViewBag.EmployeeId = id;
-                return View(mapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
+                return View(mapperToTaskViewModel.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
             }
             catch(NotExistEmployeeWithIdException ex)
             {
@@ -171,13 +182,8 @@ namespace PlannerTasks.WEB_MVC.Controllers
             try
             {
                 IEnumerable<TaskDTO> taskDtos = employeeService.GetAllTaskForGivenEmployee((int)id);
-                MapperConfiguration config = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<TaskDTO, TaskViewModel>()
-                    .ForMember("TimeExecution", te => te.MapFrom(c => c.TimeExecution.Hours));
-                });
-                IMapper mapper = config.CreateMapper();
                 ViewBag.EmployeeId = id;
-                return View(mapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
+                return View(mapperToTaskViewModel.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
             }
             catch (NotExistEmployeeWithIdException ex)
             {
@@ -199,15 +205,9 @@ namespace PlannerTasks.WEB_MVC.Controllers
                     return PartialView();
                 }
 
-                MapperConfiguration config = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<TaskDTO, TaskViewModel>()
-                    .ForMember("TimeExecution", te => te.MapFrom(c => c.TimeExecution.Hours));
-                });
-                IMapper mapper = config.CreateMapper();
-
                 ViewBag.ExistingFlag = false;
 
-                return PartialView(mapper.Map<TaskDTO,TaskViewModel>(taskDto));
+                return PartialView(mapperToTaskViewModel.Map<TaskDTO,TaskViewModel>(taskDto));
             }
             catch (NotExistTaskWithIdException ex)
             {
@@ -230,16 +230,9 @@ namespace PlannerTasks.WEB_MVC.Controllers
                     ViewBag.ExistingFlag = true;
                     return View();
                 }
-
-                MapperConfiguration config = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<TaskDTO, TaskViewModel>()
-                    .ForMember("TimeExecution", te => te.MapFrom(c => c.TimeExecution.Hours));
-                });
-                IMapper mapper = config.CreateMapper();
-
                 ViewBag.ExistingFlag = false;
 
-                return View(mapper.Map<TaskDTO, TaskViewModel>(taskDto));
+                return View(mapperToTaskViewModel.Map<TaskDTO, TaskViewModel>(taskDto));
             }
             catch (NotExistTaskWithIdException ex)
             {
@@ -281,12 +274,7 @@ namespace PlannerTasks.WEB_MVC.Controllers
             {
                 ViewBag.EmployeeId = id;
                 IEnumerable<TaskDTO> taskDtos = employeeService.GetAllTaskForGivenEmployee(id);
-                MapperConfiguration config = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<TaskDTO, TaskViewModel>()
-                    .ForMember("TimeExecution", te => te.MapFrom(c => c.TimeExecution.Hours));
-                });
-                IMapper mapper = config.CreateMapper();
-                return View(mapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
+                return View(mapperToTaskViewModel.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
             }
             catch (NotExistEmployeeWithIdException e)
             {
@@ -294,7 +282,6 @@ namespace PlannerTasks.WEB_MVC.Controllers
             }
         }
 
-        // Home/Search
         [HttpGet]
         public ActionResult SearchListOfStatusHistory()
         {
@@ -304,15 +291,10 @@ namespace PlannerTasks.WEB_MVC.Controllers
         [HttpPost]
         public ActionResult SearchHistory(int TaskId)
         {
-            //Thread.Sleep(1000);
             try 
             {
                 IEnumerable<StatusHistoryDTO> statusHistoryDtos = statusHistoryService.GetAllStatusHistoryForGivenTask(TaskId).ToList();
-                MapperConfiguration config = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<StatusHistoryDTO, StatusHistoryViewModel>();
-                });
-                IMapper mapper = config.CreateMapper();
-                return PartialView(mapper.Map<IEnumerable<StatusHistoryDTO>, IEnumerable<StatusHistoryViewModel>>(statusHistoryDtos));
+                return PartialView(mapperToStatusHistoryViewModel.Map<IEnumerable<StatusHistoryDTO>, IEnumerable<StatusHistoryViewModel>>(statusHistoryDtos));
             }
             catch(NotExistTaskWithIdException ex)
             {
@@ -345,15 +327,8 @@ namespace PlannerTasks.WEB_MVC.Controllers
         {
             int pageSize = 3;
             int pageNumber = (page ?? 1);
-
             IEnumerable<EmployeeDTO> employeeDTOs = employeeService.GetEmployees();
-            MapperConfiguration config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<EmployeeDTO, EmployeeViewModel>();
-            });
-            IMapper mapper = config.CreateMapper();
-            IEnumerable<EmployeeViewModel> employeeViewModels = mapper.Map<IEnumerable<EmployeeDTO>, IEnumerable<EmployeeViewModel>>(employeeDTOs);
-
-            return View(employeeViewModels.ToList().ToPagedList(pageNumber, pageSize));
+            return View(mapperToEmployeeViewModel.Map<IEnumerable<EmployeeDTO>, IEnumerable<EmployeeViewModel>>(employeeDTOs).ToList().ToPagedList(pageNumber, pageSize));
         }
 
         protected void Dispose(bool disposing)

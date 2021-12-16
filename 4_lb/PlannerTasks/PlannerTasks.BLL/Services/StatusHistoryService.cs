@@ -21,12 +21,27 @@ namespace PlannerTasks.BLL.Services
         IUnitOfWork Database { get; set; }
 
         /// <summary>
+        /// Property presents of mapper of StatusHistory to StatusHistoryDTO
+        /// </summary>
+        //MapperConfiguration configStatusHistory { get; set; }
+        IMapper mapperToStatusHistoryDTO { get; set; }
+
+        /// <summary>
+        /// Property presents of mapper of StatusHistoryDTO to StatusHistory
+        /// </summary>
+        IMapper mapperToStatusHistory { get; set; }
+
+        /// <summary>
         /// Constructor with one parameter
         /// </summary>
         /// <param name="uow"></param>
         public StatusHistoryService(IUnitOfWork uow)
         {
             Database = uow;
+            MapperConfiguration configStatusHistory = new MapperConfiguration(cfg => cfg.CreateMap<StatusHistory, StatusHistoryDTO>());
+            MapperConfiguration configStatusHistoryDTO = new MapperConfiguration(cfg => cfg.CreateMap<StatusHistoryDTO, StatusHistory>());
+            mapperToStatusHistoryDTO = configStatusHistory.CreateMapper();
+            mapperToStatusHistory = configStatusHistoryDTO.CreateMapper();
         }
         public IEnumerable<StatusHistoryDTO> GetAllStatusHistoryForGivenTask(int id)
         {
@@ -35,14 +50,8 @@ namespace PlannerTasks.BLL.Services
             {
                 throw new NotExistTaskWithIdException("Task with given id is not existing.");
             }
-
-            MapperConfiguration config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<StatusHistory, StatusHistoryDTO>();
-            });
-
-            IMapper mapper = config.CreateMapper();
             IEnumerable<StatusHistory> source = Database.StatusHistories.Find(sh => sh.TaskId == id);
-            return mapper.Map<IEnumerable<StatusHistory>, IEnumerable<StatusHistoryDTO>>(source);
+            return mapperToStatusHistoryDTO.Map<IEnumerable<StatusHistory>, IEnumerable<StatusHistoryDTO>>(source);
         }
         public void SetOnExecutionStatus(int id)
         {
@@ -55,12 +64,21 @@ namespace PlannerTasks.BLL.Services
             task.Status = Status.OnExecution;
             Database.Tasks.Update(task);
 
-            Database.StatusHistories.Create(new StatusHistory()
+            StatusHistoryDTO statusHistoryDTO = new StatusHistoryDTO()
+            {
+                DateAppearOfStatus = DateTime.Now,
+                Status = (int)Status.OnExecution,
+                TaskId = id
+            };
+
+            Database.StatusHistories.Create(mapperToStatusHistory.Map<StatusHistoryDTO, StatusHistory>(statusHistoryDTO));
+
+            /*Database.StatusHistories.Create(new StatusHistory()
             {
                 DateAppearOfStatus = DateTime.Now,
                 Status = Status.OnExecution,
                 TaskId = id
-            });
+            });*/
 
             Database.Save();
         }
@@ -75,12 +93,21 @@ namespace PlannerTasks.BLL.Services
             task.Status = Status.OnTesting;
             Database.Tasks.Update(task);
 
-            Database.StatusHistories.Create(new StatusHistory()
+            StatusHistoryDTO statusHistoryDTO = new StatusHistoryDTO()
+            {
+                DateAppearOfStatus = DateTime.Now,
+                Status = (int)Status.OnTesting,
+                TaskId = id
+            };
+
+            Database.StatusHistories.Create(mapperToStatusHistory.Map<StatusHistoryDTO, StatusHistory>(statusHistoryDTO));
+
+            /*Database.StatusHistories.Create(new StatusHistory()
             {
                 DateAppearOfStatus = DateTime.Now,
                 Status = Status.OnTesting,
                 TaskId = id
-            });
+            });*/
 
             Database.Save();
         }
@@ -95,12 +122,21 @@ namespace PlannerTasks.BLL.Services
             task.Status = Status.Expired;
             Database.Tasks.Update(task);
 
-            Database.StatusHistories.Create(new StatusHistory()
+            StatusHistoryDTO statusHistoryDTO = new StatusHistoryDTO()
+            {
+                DateAppearOfStatus = DateTime.Now,
+                Status = (int)Status.Expired,
+                TaskId = id
+            };
+
+            Database.StatusHistories.Create(mapperToStatusHistory.Map<StatusHistoryDTO, StatusHistory>(statusHistoryDTO));
+
+            /*Database.StatusHistories.Create(new StatusHistory()
             {
                 DateAppearOfStatus = DateTime.Now,
                 Status = Status.Expired,
                 TaskId = id
-            });
+            });*/
 
             Database.Save();
         }
@@ -115,12 +151,21 @@ namespace PlannerTasks.BLL.Services
             task.Status = Status.Done;
             Database.Tasks.Update(task);
 
-            Database.StatusHistories.Create(new StatusHistory()
+            StatusHistoryDTO statusHistoryDTO = new StatusHistoryDTO()
+            {
+                DateAppearOfStatus = DateTime.Now,
+                Status = (int)Status.Done,
+                TaskId = id
+            };
+
+            Database.StatusHistories.Create(mapperToStatusHistory.Map<StatusHistoryDTO, StatusHistory>(statusHistoryDTO));
+
+            /*Database.StatusHistories.Create(new StatusHistory()
             {
                 DateAppearOfStatus = DateTime.Now,
                 Status = Status.Done,
                 TaskId = id
-            });
+            });*/
 
             Database.Save();
         }

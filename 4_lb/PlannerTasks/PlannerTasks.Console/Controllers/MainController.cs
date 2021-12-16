@@ -28,13 +28,6 @@ namespace PlannerTasks.Console.Controllers
         {
             try
             {
-                /*MapperConfiguration config = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<TaskViewModel, TaskDTO>();
-                });
-
-                IMapper mapper = config.CreateMapper();
-                TaskDTO taskDto = mapper.Map<TaskViewModel, TaskDTO>(task);*/
-
                 taskService.MakeTask(task);
             }
             catch (NotExistEmployeeWithIdException ex)
@@ -55,16 +48,12 @@ namespace PlannerTasks.Console.Controllers
         }
         public IEnumerable<EmployeeDTO> GetEmployees()
         {
-            /*var mapper = new MapperConfiguration(cfg => cfg.CreateMap<EmployeeDTO, EmployeeViewModel>()).CreateMapper();
-            return mapper.Map<IEnumerable<EmployeeDTO>, List<EmployeeViewModel>>(employeeService.GetEmployees());*/
             return employeeService.GetEmployees();
         }
         public EmployeeDTO GetEmployee(int id)
         {
             try
             {
-                /*var mapper = new MapperConfiguration(cfg => cfg.CreateMap<EmployeeDTO, EmployeeViewModel>()).CreateMapper();
-                return mapper.Map<EmployeeDTO, EmployeeViewModel>(employeeService.GetEmployee(id));*/
                 return employeeService.GetEmployee(id);
             }
             catch (NotExistEmployeeWithIdException e)
@@ -77,12 +66,6 @@ namespace PlannerTasks.Console.Controllers
             try
             {
                 return employeeService.GetAllTaskForGivenEmployee(id);
-                /*IEnumerable<TaskDTO> taskDtos = employeeService.GetAllTaskForGivenEmployee(id);
-                MapperConfiguration config = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<TaskDTO, TaskViewModel>();
-                });
-                IMapper mapper = config.CreateMapper();
-                return mapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos);*/
             }
             catch (NotExistEmployeeWithIdException e)
             {
@@ -92,12 +75,6 @@ namespace PlannerTasks.Console.Controllers
         }
         public IEnumerable<StatusHistoryDTO> GetAllStatusHistoryForGivenTask(int id)
         {
-            /*IEnumerable<StatusHistoryDTO> statusHistoryDtos = statusHistoryService.GetAllStatusHistoryForGivenTask(id);
-            MapperConfiguration config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<StatusHistoryDTO, StatusHistoryViewModel>();
-            });
-            IMapper mapper = config.CreateMapper();
-            return mapper.Map<IEnumerable<StatusHistoryDTO>, IEnumerable<StatusHistoryViewModel>>(statusHistoryDtos);*/
             return statusHistoryService.GetAllStatusHistoryForGivenTask(id);
         }
 
