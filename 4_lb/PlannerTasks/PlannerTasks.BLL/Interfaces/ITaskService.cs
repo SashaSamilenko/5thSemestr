@@ -12,6 +12,7 @@ namespace PlannerTasks.BLL.Interfaces
         void MakeTask(TaskDTO taskDto);
         void DeleteTask(int id);
         TaskDTO GetTask(int id);
+        IEnumerable<TaskDTO> GetAllTask();
         void CheckTimeExcecutionOfTasks(Object uow);
         void CheckTimeExcecutionOfTasksAsync(Object uow);
         void Dispose();

@@ -108,6 +108,14 @@ namespace PlannerTasks.BLL.Services
                 throw new NotExistTaskWithIdException("Task did not find with given id.");
             return mapperToTaskDTO.Map<Task, TaskDTO>(task);
         }
+
+        public IEnumerable<TaskDTO> GetAllTask()
+        {
+            IEnumerable<Task> tasks = Database.Tasks.GetAll().ToList();
+            if (tasks == null)
+                throw new ValidationException("Task did not find.");
+            return mapperToTaskDTO.Map<IEnumerable<Task>, IEnumerable<TaskDTO>>(tasks);
+        }
         public void CheckTimeExcecutionOfTasks(Object uow)
         {
             DateTime timeNow = DateTime.Now;

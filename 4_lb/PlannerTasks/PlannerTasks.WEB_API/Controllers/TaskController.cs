@@ -49,7 +49,7 @@ namespace PlannerTasks.WEB_API.Controllers
         [HttpGet]
         public IEnumerable<TaskViewModel> GetAllTasks()
         {
-            IEnumerable<TaskDTO> taskDTOs = null;
+            /*IEnumerable<TaskDTO> taskDTOs = null;
             foreach(EmployeeDTO employeeDto in employeeService.GetEmployees())
             {
                 IEnumerable<TaskDTO> tempTasks = employeeService.GetAllTaskForGivenEmployee(employeeDto.EmployeeId);
@@ -61,6 +61,8 @@ namespace PlannerTasks.WEB_API.Controllers
                     }   
                 }
             }
+            return imapper.Map<IEnumerable<TaskDTO>, List<TaskViewModel>>(taskDTOs);*/
+            IEnumerable<TaskDTO> taskDTOs = taskService.GetAllTask();
             return imapper.Map<IEnumerable<TaskDTO>, List<TaskViewModel>>(taskDTOs);
         }
     }
