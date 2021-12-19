@@ -20,6 +20,7 @@ using PlannerTasks.BLL.DTO;
 using PlannerTasks.BLL.Infrastructure;
 using PlannerTasks.WEB_MVC.Models;
 using PlannerTasks.WEB_MVC.Util;
+using PlannerTasks.WEB_MVC.App_Start;
 using System.Configuration;
 
 namespace PlannerTasks.WEB_MVC.Controllers
@@ -29,18 +30,37 @@ namespace PlannerTasks.WEB_MVC.Controllers
         ITaskService taskService { get; set; }
         IEmployeeService employeeService { get; set; }
         IStatusHistoryService statusHistoryService { get; set; }
-        IMapper mapperToTaskDTO { get; set; }
+        /*IMapper mapperToTaskDTO { get; set; }
         IMapper mapperToTaskViewModel { get; set; }
         IMapper mapperToStatusHistoryViewModel { get; set; }
-        IMapper mapperToEmployeeViewModel { get; set; }
-        public HomeController()
+        IMapper mapperToEmployeeViewModel { get; set; }*/
+        IMapper imapper { get; set; }
+        public HomeController()//(ITaskService taskS, IEmployeeService employeeS, IStatusHistoryService statusHistoryS)
         {
+            imapper = AutoMapperConfiguration.GetMapper();
+            var modules = new INinjectModule[] { new ServiceModule("PlannerDB") };
+            var kernel = new StandardKernel(modules);
+
+            kernel.Bind<ITaskService>().To<TaskService>();
+            kernel.Bind<IEmployeeService>().To<EmployeeService>();
+            kernel.Bind<IStatusHistoryService>().To<StatusHistoryService>();
+
+            taskService = kernel.Get<ITaskService>();
+            employeeService = kernel.Get<IEmployeeService>();
+            statusHistoryService = kernel.Get<IStatusHistoryService>();
+
+            /*taskService = taskS;
+            employeeService = employeeS;
+            statusHistoryService = statusHistoryS;
+            imapper = AutoMapperConfiguration.GetMapper();*/
+            /*
             var modules = new INinjectModule[] { new ServiceModule("PlannerDB"), new TaskModule(), new EmployeeModule(), new StatusHistoryModule() };
             var kernel = new StandardKernel(modules);
             taskService = kernel.Get<ITaskService>();
             employeeService = kernel.Get<IEmployeeService>();
             statusHistoryService = kernel.Get<IStatusHistoryService>();
 
+            
             MapperConfiguration configToTaskDTO = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<TaskViewModel, TaskDTO>()
@@ -62,19 +82,15 @@ namespace PlannerTasks.WEB_MVC.Controllers
             MapperConfiguration configToEmployeeViewModel = new MapperConfiguration(cfg => {
                 cfg.CreateMap<EmployeeDTO, EmployeeViewModel>();
             });
-            mapperToEmployeeViewModel = configToEmployeeViewModel.CreateMapper();
+            mapperToEmployeeViewModel = configToEmployeeViewModel.CreateMapper();*/
         }
 
         // /Home/Index
         public ActionResult Index()
         {
             IEnumerable<EmployeeDTO> employeeDTOs = employeeService.GetEmployees();
-            MapperConfiguration config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<EmployeeDTO, EmployeeViewModel>();
-            });
-            IMapper mapper = config.CreateMapper();
-            IEnumerable<EmployeeViewModel> employeeViewModels = mapper.Map<IEnumerable<EmployeeDTO>, IEnumerable<EmployeeViewModel>>(employeeDTOs);
 
+            IEnumerable<EmployeeViewModel> employeeViewModels = imapper.Map<IEnumerable<EmployeeDTO>, IEnumerable<EmployeeViewModel>>(employeeDTOs);
             ViewBag.Title = "Планувальник завдань";
             return View(employeeViewModels);
         }
@@ -93,8 +109,8 @@ namespace PlannerTasks.WEB_MVC.Controllers
             if (ModelState.IsValidField("Description") && ModelState.IsValidField("TimeExecution") && ModelState.IsValidField("CurrentPriority"))
             {
                 try
-                { 
-                    TaskDTO taskDto = mapperToTaskDTO.Map<TaskViewModel, TaskDTO>(task);
+                {
+                    TaskDTO taskDto = imapper.Map<TaskViewModel, TaskDTO>(task);
                     taskDto.Status = 0;
                     taskService.MakeTask(taskDto);
                     return RedirectToAction("Index");
@@ -134,7 +150,8 @@ namespace PlannerTasks.WEB_MVC.Controllers
             {
                 IEnumerable<TaskDTO> taskDtos = employeeService.GetAllTaskForGivenEmployee((int)id);
                 ViewBag.EmployeeId = id;
-                return View(mapperToTaskViewModel.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
+
+                return View(imapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
             }
             catch(NotExistEmployeeWithIdException ex)
             {
@@ -183,7 +200,7 @@ namespace PlannerTasks.WEB_MVC.Controllers
             {
                 IEnumerable<TaskDTO> taskDtos = employeeService.GetAllTaskForGivenEmployee((int)id);
                 ViewBag.EmployeeId = id;
-                return View(mapperToTaskViewModel.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
+                return View(imapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
             }
             catch (NotExistEmployeeWithIdException ex)
             {
@@ -207,7 +224,7 @@ namespace PlannerTasks.WEB_MVC.Controllers
 
                 ViewBag.ExistingFlag = false;
 
-                return PartialView(mapperToTaskViewModel.Map<TaskDTO,TaskViewModel>(taskDto));
+                return PartialView(imapper.Map<TaskDTO,TaskViewModel>(taskDto));
             }
             catch (NotExistTaskWithIdException ex)
             {
@@ -232,7 +249,7 @@ namespace PlannerTasks.WEB_MVC.Controllers
                 }
                 ViewBag.ExistingFlag = false;
 
-                return View(mapperToTaskViewModel.Map<TaskDTO, TaskViewModel>(taskDto));
+                return View(imapper.Map<TaskDTO, TaskViewModel>(taskDto));
             }
             catch (NotExistTaskWithIdException ex)
             {
@@ -274,7 +291,7 @@ namespace PlannerTasks.WEB_MVC.Controllers
             {
                 ViewBag.EmployeeId = id;
                 IEnumerable<TaskDTO> taskDtos = employeeService.GetAllTaskForGivenEmployee(id);
-                return View(mapperToTaskViewModel.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
+                return View(imapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskDtos));
             }
             catch (NotExistEmployeeWithIdException e)
             {
@@ -294,7 +311,7 @@ namespace PlannerTasks.WEB_MVC.Controllers
             try 
             {
                 IEnumerable<StatusHistoryDTO> statusHistoryDtos = statusHistoryService.GetAllStatusHistoryForGivenTask(TaskId).ToList();
-                return PartialView(mapperToStatusHistoryViewModel.Map<IEnumerable<StatusHistoryDTO>, IEnumerable<StatusHistoryViewModel>>(statusHistoryDtos));
+                return PartialView(imapper.Map<IEnumerable<StatusHistoryDTO>, IEnumerable<StatusHistoryViewModel>>(statusHistoryDtos));
             }
             catch(NotExistTaskWithIdException ex)
             {
@@ -328,7 +345,7 @@ namespace PlannerTasks.WEB_MVC.Controllers
             int pageSize = 3;
             int pageNumber = (page ?? 1);
             IEnumerable<EmployeeDTO> employeeDTOs = employeeService.GetEmployees();
-            return View(mapperToEmployeeViewModel.Map<IEnumerable<EmployeeDTO>, IEnumerable<EmployeeViewModel>>(employeeDTOs).ToList().ToPagedList(pageNumber, pageSize));
+            return View(imapper.Map<IEnumerable<EmployeeDTO>, IEnumerable<EmployeeViewModel>>(employeeDTOs).ToList().ToPagedList(pageNumber, pageSize));
         }
 
         protected void Dispose(bool disposing)

@@ -45,7 +45,6 @@ namespace PlannerTasks.BLL.Services
         public TaskService(IUnitOfWork uow)
         {
             Database = uow;
-            Thread.TimerCallback tm = new Thread.TimerCallback(CheckTimeExcecutionOfTasksAsync);
             MapperConfiguration configTaskToEntity = new MapperConfiguration(cfg => {
                 cfg.CreateMap<TaskDTO, Task>()
                 .ForMember("StartTime", te => te.MapFrom(c => DateTime.Now))
@@ -62,6 +61,9 @@ namespace PlannerTasks.BLL.Services
             mapperToStatusHistoryEntity = configStatusHistoryToEntity.CreateMapper();
             mapperToTaskEntity = configTaskToEntity.CreateMapper();
             mapperToTaskDTO = configTaskToDto.CreateMapper();
+
+
+            Thread.TimerCallback tm = new Thread.TimerCallback(CheckTimeExcecutionOfTasksAsync);
             // создаем таймер
             //Thread.Timer timer = new Thread.Timer(tm, uow, 5000, 600000);
         }
