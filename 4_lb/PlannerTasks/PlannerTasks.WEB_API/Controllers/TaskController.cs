@@ -18,6 +18,8 @@ using PlannerTasks.BLL.Infrastructure;
 using Ninject;
 using Ninject.Modules;
 using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
+using System.Net.Http;
+using System.Net;
 
 namespace PlannerTasks.WEB_API.Controllers
 {
@@ -44,26 +46,105 @@ namespace PlannerTasks.WEB_API.Controllers
             employeeService = kernel.Get<IEmployeeService>();
             statusHistoryService = kernel.Get<IStatusHistoryService>();
         }
+
         // GET api/<controller>
-        [System.Web.Http.Route("~/api/GetAllTasks")]
-        [HttpGet]
-        public IEnumerable<TaskViewModel> GetAllTasks()
+        //[System.Web.Http.Route("~/api/GetAllTasks")]
+        [System.Web.Http.Route("api/Tasks")]
+        public IEnumerable<TaskViewModel> Get()
         {
-            /*IEnumerable<TaskDTO> taskDTOs = null;
-            foreach(EmployeeDTO employeeDto in employeeService.GetEmployees())
-            {
-                IEnumerable<TaskDTO> tempTasks = employeeService.GetAllTaskForGivenEmployee(employeeDto.EmployeeId);
-                if(tempTasks != null)
-                {
-                    foreach(TaskDTO taskDto in tempTasks)
-                    {
-                        taskDTOs.Append<TaskDTO>(taskDto);
-                    }   
-                }
-            }
-            return imapper.Map<IEnumerable<TaskDTO>, List<TaskViewModel>>(taskDTOs);*/
             IEnumerable<TaskDTO> taskDTOs = taskService.GetAllTask();
             return imapper.Map<IEnumerable<TaskDTO>, List<TaskViewModel>>(taskDTOs);
+        }
+
+        // GET api/<controller>/id
+        //[System.Web.Http.Route("~/api/GetTask/id")]
+        //[HttpGet]
+        [System.Web.Http.Route("api/Tasks/{id}")]
+        public IHttpActionResult Get(Int32 id)
+        {
+            try
+            {
+                TaskDTO taskDTO = taskService.GetTask(id);
+
+                return Ok(imapper.Map<TaskDTO, TaskViewModel>(taskDTO));
+            }
+            catch (NotExistTaskWithIdException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [System.Web.Http.Route("api/Task")]
+        [System.Web.Http.HttpPost]
+        public HttpResponseMessage Post([FromBody] TaskViewModel taskViewModel)
+        {
+            if (!ModelState.IsValidField("EmployeeId") || !ModelState.IsValidField("Description") || !ModelState.IsValidField("TimeExecution") || !ModelState.IsValidField("CurrentPriority"))
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+            TaskDTO taskDto = imapper.Map<TaskViewModel, TaskDTO>(taskViewModel);
+            taskDto.Status = 0;
+            try
+            {
+                taskService.MakeTask(taskDto);
+                return new HttpResponseMessage(HttpStatusCode.Created);
+            }
+            catch
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+        }
+
+        [System.Web.Http.Route("api/Tasks/{id}")]
+        [System.Web.Http.HttpDelete]
+        public IHttpActionResult Delete(Int32 id)
+        {
+            try
+            {
+                taskService.DeleteTask(id);
+                return Ok();
+            }
+            catch (NotExistTaskWithIdException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [System.Web.Http.Route("api/Tasks/{taskId}")]
+        [System.Web.Http.HttpPatch]
+        public IHttpActionResult ChangeStatus(Int32 taskId, [FromBody] TaskViewModel taskViewModel)
+        {
+            if (!ModelState.IsValidField("Status"))
+            {
+                return BadRequest("Field Status can be more zero and less than 5");
+            }
+            try
+            {
+                TaskDTO taskDto = taskService.GetTask(taskId);
+                taskDto.Status = taskViewModel.Status;
+                taskService.ChangeTaskStatus(taskDto);
+                return Ok();
+            }
+            catch (NotExistTaskWithIdException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [System.Web.Http.Route("api/Employees/{employeeId}/Tasks")]
+        [HttpGet]
+        public IHttpActionResult GetAllTasksForEmployee(Int32 employeeId)
+        {
+            try
+            {
+                IEnumerable<TaskDTO> taskDTOs = employeeService.GetAllTaskForGivenEmployee(employeeId);
+                return Ok(imapper.Map<IEnumerable<TaskDTO>, List<TaskViewModel>>(taskDTOs));
+            }
+            catch(NotExistEmployeeWithIdException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
     }
 }

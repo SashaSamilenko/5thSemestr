@@ -10,6 +10,7 @@ namespace PlannerTasks.BLL.Interfaces
     public interface IStatusHistoryService
     {
         IEnumerable<StatusHistoryDTO> GetAllStatusHistoryForGivenTask(int id);
+        IEnumerable<StatusHistoryDTO> GetAllStatusHistory();
         void SetOnExecutionStatus(int id);
         void SetOnTestingStatus(int id);
         void SetExpiredStatus(int id);

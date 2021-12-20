@@ -19,6 +19,8 @@ namespace PlannerTasks.WEB_API.Models
         [Range(1, 24, ErrorMessage = "Значення може приймати бути від 1 до 24")]
         [Display(Name = "Очікуваний час виконання")]
         public Int32 TimeExecution { get; set; }
+
+        [Range(0, 4, ErrorMessage = "Значення може приймати бути від 0 до 4")]
         public Int32 Status { get; set; }
 
         [Required]

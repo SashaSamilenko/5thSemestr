@@ -108,12 +108,28 @@ namespace PlannerTasks.BLL.Services
                 throw new NotExistTaskWithIdException("Task did not find with given id.");
             return mapperToTaskDTO.Map<Task, TaskDTO>(task);
         }
+        public void ChangeTaskStatus(TaskDTO taskDto)
+        {
+            Task task = Database.Tasks.Get(taskDto.TaskId);
+            task.Status = (Status)taskDto.Status;
+            Database.Tasks.Update(task);
 
+            StatusHistoryDTO statusHistoryDTO = new StatusHistoryDTO()
+            {
+                DateAppearOfStatus = DateTime.Now,
+                Status = taskDto.Status,
+                TaskId = taskDto.TaskId
+            };
+
+            Database.StatusHistories.Create(mapperToStatusHistoryEntity.Map<StatusHistoryDTO, StatusHistory>(statusHistoryDTO));
+
+            Database.Save();
+        }
         public IEnumerable<TaskDTO> GetAllTask()
         {
             IEnumerable<Task> tasks = Database.Tasks.GetAll().ToList();
             if (tasks == null)
-                throw new ValidationException("Task did not find.");
+                throw new ValidationException("Tasks did not find.");
             return mapperToTaskDTO.Map<IEnumerable<Task>, IEnumerable<TaskDTO>>(tasks);
         }
         public void CheckTimeExcecutionOfTasks(Object uow)

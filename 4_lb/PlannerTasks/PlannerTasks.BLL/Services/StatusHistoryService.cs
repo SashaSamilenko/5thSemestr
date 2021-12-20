@@ -43,6 +43,23 @@ namespace PlannerTasks.BLL.Services
             mapperToStatusHistoryDTO = configStatusHistory.CreateMapper();
             mapperToStatusHistory = configStatusHistoryDTO.CreateMapper();
         }
+
+        public IEnumerable<StatusHistoryDTO> GetAllStatusHistory()
+        {
+            IEnumerable<StatusHistory> statusHistories = Database.StatusHistories.GetAll().ToList();
+            if (statusHistories == null)
+                throw new ValidationException("Status histories did not find.");
+            return mapperToStatusHistoryDTO.Map<IEnumerable<StatusHistory>, IEnumerable<StatusHistoryDTO>>(statusHistories);
+        }
+
+        public StatusHistoryDTO GetStatusHistory(int id)
+        {
+            StatusHistory statusHistory = Database.StatusHistories.Get(id);
+            if (statusHistory == null)
+                throw new ValidationException("Status history with given identity did not find.");
+            return mapperToStatusHistoryDTO.Map<StatusHistory, StatusHistoryDTO>(statusHistory);
+        }
+
         public IEnumerable<StatusHistoryDTO> GetAllStatusHistoryForGivenTask(int id)
         {
             Task task = Database.Tasks.Get(id);
@@ -53,6 +70,7 @@ namespace PlannerTasks.BLL.Services
             IEnumerable<StatusHistory> source = Database.StatusHistories.Find(sh => sh.TaskId == id);
             return mapperToStatusHistoryDTO.Map<IEnumerable<StatusHistory>, IEnumerable<StatusHistoryDTO>>(source);
         }
+
         public void SetOnExecutionStatus(int id)
         {
             Task task = Database.Tasks.Get(id);
